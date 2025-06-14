@@ -24,17 +24,17 @@ export const HomeSection = () => {
     <section ref={ref} id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden hero-gradient">
       {/* Artistic background elements */}
       <motion.div 
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-15"
         style={{ y }}
       >
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/15 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-primary/10 rounded-full blur-2xl" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/25 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-primary/15 rounded-full blur-2xl" />
       </motion.div>
 
-      {/* Featured artwork overlay */}
+      {/* Featured artwork overlay with stronger contrast */}
       <motion.div 
-        className="absolute inset-0 opacity-8"
+        className="absolute inset-0 opacity-20"
         style={{ y: y, opacity }}
       >
         <img
@@ -42,12 +42,12 @@ export const HomeSection = () => {
           alt="Featured artwork background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background/95" />
       </motion.div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Column - Main Content */}
+          {/* Left Column - Main Content with enhanced visibility */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -61,18 +61,19 @@ export const HomeSection = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               <motion.div
-                className="inline-flex items-center gap-3 px-6 py-3 bg-card/80 backdrop-blur-sm border border-border/50 rounded-full text-muted-foreground text-sm font-inter"
-                whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                className="inline-flex items-center gap-3 px-6 py-3 bg-card/90 backdrop-blur-md border border-primary/30 rounded-full text-foreground text-sm font-inter shadow-lg"
+                whileHover={{ scale: 1.05, backgroundColor: "rgba(68, 124, 179, 0.15)" }}
               >
                 <Award size={16} className="text-primary" />
                 Contemporary Georgian Master Artist
               </motion.div>
               
-              <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-medium text-foreground leading-[0.9] tracking-tight">
+              <h1 className="font-playfair text-6xl md:text-7xl lg:text-8xl font-medium text-foreground leading-[0.9] tracking-tight drop-shadow-2xl">
                 <motion.div
                   initial={{ opacity: 0, rotateX: 90 }}
                   animate={{ opacity: 1, rotateX: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
+                  className="text-shadow-lg"
                 >
                   Levan
                 </motion.div>
@@ -80,7 +81,7 @@ export const HomeSection = () => {
                   initial={{ opacity: 0, rotateX: 90 }}
                   animate={{ opacity: 1, rotateX: 0 }}
                   transition={{ duration: 0.8, delay: 0.8 }}
-                  className="text-primary"
+                  className="text-primary drop-shadow-2xl"
                 >
                   Mosiashvili
                 </motion.div>
@@ -88,7 +89,7 @@ export const HomeSection = () => {
             </motion.div>
             
             <motion.p 
-              className="text-xl md:text-2xl text-muted-foreground max-w-2xl font-inter font-light leading-relaxed"
+              className="text-xl md:text-2xl text-foreground/90 max-w-2xl font-inter font-light leading-relaxed drop-shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
@@ -105,7 +106,7 @@ export const HomeSection = () => {
             >
               <motion.button
                 onClick={() => scrollToSection('gallery')}
-                className="btn-primary flex items-center justify-center gap-3 text-lg py-6 px-10 group"
+                className="btn-primary flex items-center justify-center gap-3 text-lg py-6 px-10 group shadow-xl"
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -116,7 +117,7 @@ export const HomeSection = () => {
               
               <motion.button
                 onClick={() => scrollToSection('about')}
-                className="px-10 py-6 border-2 border-primary/40 text-foreground rounded-lg font-medium font-inter transition-all duration-300 hover:bg-primary/10 hover:border-primary/60 flex items-center justify-center gap-3 text-lg backdrop-blur-sm"
+                className="px-10 py-6 border-2 border-primary/50 bg-card/50 text-foreground rounded-lg font-medium font-inter transition-all duration-300 hover:bg-primary/20 hover:border-primary/70 flex items-center justify-center gap-3 text-lg backdrop-blur-md shadow-lg"
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -125,24 +126,24 @@ export const HomeSection = () => {
               </motion.button>
             </motion.div>
 
-            {/* Stats */}
+            {/* Stats with enhanced visibility */}
             <motion.div 
-              className="grid grid-cols-3 gap-8 pt-8 border-t border-border/30"
+              className="grid grid-cols-3 gap-8 pt-8 border-t border-primary/20"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.4 }}
             >
               <div className="text-center">
-                <div className="font-playfair text-3xl font-semibold text-primary">20+</div>
-                <div className="text-sm text-muted-foreground font-inter">Years Experience</div>
+                <div className="font-playfair text-3xl font-semibold text-primary drop-shadow-lg">20+</div>
+                <div className="text-sm text-foreground/80 font-inter">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="font-playfair text-3xl font-semibold text-primary">100+</div>
-                <div className="text-sm text-muted-foreground font-inter">Artworks Created</div>
+                <div className="font-playfair text-3xl font-semibold text-primary drop-shadow-lg">100+</div>
+                <div className="text-sm text-foreground/80 font-inter">Artworks Created</div>
               </div>
               <div className="text-center">
-                <div className="font-playfair text-3xl font-semibold text-primary">50+</div>
-                <div className="text-sm text-muted-foreground font-inter">Exhibitions</div>
+                <div className="font-playfair text-3xl font-semibold text-primary drop-shadow-lg">50+</div>
+                <div className="text-sm text-foreground/80 font-inter">Exhibitions</div>
               </div>
             </motion.div>
           </motion.div>
@@ -159,21 +160,21 @@ export const HomeSection = () => {
               whileHover={{ scale: 1.02 }}
               onClick={() => scrollToSection('gallery')}
             >
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl border border-primary/20">
                 <img
                   src="/lovable-uploads/92b785c0-0831-46a3-ad0f-5c6a095c8d19.png"
                   alt="Featured artwork"
                   className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
-                  <h3 className="font-playfair text-2xl font-medium text-foreground mb-2">Featured Artwork</h3>
-                  <p className="text-muted-foreground font-inter">Click to explore the full collection</p>
+                  <h3 className="font-playfair text-2xl font-medium text-foreground mb-2 drop-shadow-lg">Featured Artwork</h3>
+                  <p className="text-foreground/90 font-inter drop-shadow-md">Click to explore the full collection</p>
                 </div>
               </div>
               
               {/* Decorative frame */}
-              <div className="absolute -inset-4 border-2 border-primary/20 rounded-3xl -z-10 group-hover:border-primary/40 transition-colors duration-300" />
+              <div className="absolute -inset-4 border-2 border-primary/30 rounded-3xl -z-10 group-hover:border-primary/50 transition-colors duration-300" />
             </motion.div>
           </motion.div>
         </div>

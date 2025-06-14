@@ -9,21 +9,21 @@
   :root {
     /* Sophisticated dark palette - no whites */
     --background: 216 12% 8%;
-    --foreground: 210 11% 92%;
+    --foreground: 210 11% 96%;
     --card: 216 12% 10%;
-    --card-foreground: 210 11% 92%;
+    --card-foreground: 210 11% 96%;
     --popover: 216 12% 10%;
-    --popover-foreground: 210 11% 92%;
+    --popover-foreground: 210 11% 96%;
     --primary: 43 74% 66%; /* Warm gold accent */
     --primary-foreground: 216 12% 8%;
     --secondary: 216 12% 14%;
-    --secondary-foreground: 210 11% 85%;
+    --secondary-foreground: 210 11% 88%;
     --muted: 216 12% 12%;
-    --muted-foreground: 210 11% 65%;
+    --muted-foreground: 210 11% 70%;
     --accent: 216 12% 16%;
-    --accent-foreground: 210 11% 88%;
+    --accent-foreground: 210 11% 92%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 11% 92%;
+    --destructive-foreground: 210 11% 96%;
     --border: 216 12% 18%;
     --input: 216 12% 14%;
     --ring: 43 74% 66%;
@@ -33,21 +33,21 @@
   .dark {
     /* Enhanced dark theme */
     --background: 216 12% 6%;
-    --foreground: 210 11% 94%;
+    --foreground: 210 11% 98%;
     --card: 216 12% 8%;
-    --card-foreground: 210 11% 94%;
+    --card-foreground: 210 11% 98%;
     --popover: 216 12% 8%;
-    --popover-foreground: 210 11% 94%;
+    --popover-foreground: 210 11% 98%;
     --primary: 43 74% 66%;
     --primary-foreground: 216 12% 6%;
     --secondary: 216 12% 12%;
-    --secondary-foreground: 210 11% 87%;
+    --secondary-foreground: 210 11% 90%;
     --muted: 216 12% 10%;
-    --muted-foreground: 210 11% 67%;
+    --muted-foreground: 210 11% 72%;
     --accent: 216 12% 14%;
-    --accent-foreground: 210 11% 90%;
+    --accent-foreground: 210 11% 94%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 11% 94%;
+    --destructive-foreground: 210 11% 98%;
     --border: 216 12% 16%;
     --input: 216 12% 12%;
     --ring: 43 74% 66%;
@@ -86,6 +86,11 @@
   .perspective-1000 {
     perspective: 1000px;
   }
+
+  /* Enhanced text shadows for better visibility */
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
 }
 
 @layer components {
@@ -120,15 +125,17 @@
     @apply gap-8 md:gap-12 lg:gap-16;
   }
   
-  /* Typography utilities */
+  /* Typography utilities with enhanced visibility */
   .text-large {
     @apply text-lg md:text-xl;
     line-height: 1.7;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
   
   .text-body {
     @apply text-base;
     line-height: 1.7;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
   
   /* Header styling */
