@@ -25,7 +25,7 @@ export const AboutSection = () => {
           </motion.div>
           
           <motion.blockquote 
-            className="text-2xl md:text-4xl lg:text-5xl font-playfair italic text-muted-foreground leading-relaxed max-w-5xl mx-auto"
+            className="text-2xl md:text-4xl lg:text-5xl font-playfair italic text-foreground/80 leading-relaxed max-w-5xl mx-auto"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -37,7 +37,7 @@ export const AboutSection = () => {
           </motion.blockquote>
           
           <motion.p 
-            className="text-primary font-semibold text-2xl font-inter"
+            className="text-foreground font-semibold text-2xl font-inter"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -55,7 +55,7 @@ export const AboutSection = () => {
           >
             <div className="space-y-8">
               <h3 className="font-playfair text-3xl font-semibold text-foreground">Heritage & Vision</h3>
-              <p className="text-lg text-muted-foreground font-inter leading-relaxed">
+              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
                 Born and raised in the heart of Georgia, Levan Mosiashvili has dedicated his life to capturing 
                 the essence of Georgian culture through his art. His work spans traditional landscapes, 
                 intricate portraits, and modern abstract pieces that reflect the evolving spirit of his homeland.
@@ -64,7 +64,7 @@ export const AboutSection = () => {
             
             <div className="space-y-8">
               <h3 className="font-playfair text-3xl font-semibold text-foreground">Recognition & Impact</h3>
-              <p className="text-lg text-muted-foreground font-inter leading-relaxed">
+              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
                 With over two decades of artistic experience, Levan's paintings have been featured in galleries 
                 across Europe and continue to inspire art lovers around the world, bridging cultural divides 
                 through the universal language of visual expression.

@@ -81,7 +81,18 @@ const Gallery = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [filter, setFilter] = useState<string>('All');
 
-  const categories = ['All', 'Landscape', 'Portrait', 'Still Life', 'Religious', 'Abstract'];
+  const categories = [
+    'All', 
+    'Landscape', 
+    'Portrait', 
+    'Still Life', 
+    'Religious', 
+    'Abstract',
+    'Traditional',
+    'Contemporary',
+    'Nature',
+    'Cultural Heritage'
+  ];
 
   const filteredArtworks = filter === 'All' 
     ? artworks 
@@ -100,15 +111,15 @@ const Gallery = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full transition-all duration-300 ${
+              className={`px-4 py-2 text-sm rounded-full transition-all duration-300 ${
                 filter === category
                   ? 'bg-primary text-primary-foreground shadow-lg'
-                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border'
               }`}
             >
               {category}
