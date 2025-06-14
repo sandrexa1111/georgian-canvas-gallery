@@ -49,12 +49,12 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
 
   return (
     <div 
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in"
+      className="fixed inset-0 bg-black/80 z-50 flex items-start justify-center p-4 pt-8 md:pt-16 animate-fade-in overflow-y-auto"
       onClick={handleOverlayClick}
       onKeyDown={handleEscapeKey}
       tabIndex={-1}
     >
-      <div className="bg-card rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg max-w-4xl w-full my-auto">
         <div className="relative">
           {/* Close button */}
           <button
