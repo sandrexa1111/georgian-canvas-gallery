@@ -1,10 +1,11 @@
-
 import { Calendar, MapPin, Palette, Award } from 'lucide-react';
+import { Navigation } from '@/components/Navigation';
 
 const About = () => {
   return (
-    <div className="min-h-screen py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      <Navigation />
+      <div className="min-h-screen py-20">
         {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
           <div className="animate-fade-in">
@@ -194,7 +195,7 @@ const About = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
