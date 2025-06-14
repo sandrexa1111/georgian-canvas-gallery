@@ -58,10 +58,11 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				gallery: {
-					dark: '#0a0b14',
-					blue: '#1e293b',
-					accent: '#3b82f6',
-					gold: '#f59e0b',
+					dark: '#1a1611',
+					warm: '#2d2416',
+					gold: '#daa520',
+					burgundy: '#8b4513',
+					cream: '#f5f5dc',
 				}
 			},
 			borderRadius: {
@@ -89,8 +90,8 @@ export default {
 					'50%': { transform: 'translateY(-10px)' }
 				},
 				'glow': {
-					'0%, 100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
-					'50%': { boxShadow: '0 0 30px rgba(59, 130, 246, 0.6)' }
+					'0%, 100%': { boxShadow: '0 0 20px rgba(218, 165, 32, 0.3)' },
+					'50%': { boxShadow: '0 0 30px rgba(218, 165, 32, 0.6)' }
 				}
 			},
 			animation: {
