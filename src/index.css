@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Lato:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,50 +7,50 @@
 
 @layer base {
   :root {
-    /* Dark theme - Lighter grays with white accents */
-    --background: 0 0% 12%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 16%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 16%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 0% 100%; /* Pure white accent */
-    --primary-foreground: 0 0% 12%;
-    --secondary: 0 0% 20%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 70%;
-    --accent: 0 0% 85%; /* Light gray accent */
-    --accent-foreground: 0 0% 12%;
-    --destructive: 0 65% 58%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 25%;
-    --input: 0 0% 25%;
-    --ring: 0 0% 100%;
-    --radius: 0.75rem;
-  }
-
-  .light {
-    /* Light theme - Much lighter overall */
+    /* Light theme - Clean, minimal palette */
     --background: 0 0% 98%;
-    --foreground: 0 0% 15%;
+    --foreground: 0 0% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-    --primary: 0 0% 20%; /* Dark gray for contrast */
+    --popover-foreground: 0 0% 10%;
+    --primary: 0 0% 15%; /* Dark charcoal for elegance */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 95%;
+    --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 15%;
-    --muted: 0 0% 95%;
+    --muted: 0 0% 94%;
     --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 90%; /* Light gray accent */
+    --accent: 0 0% 92%;
     --accent-foreground: 0 0% 15%;
-    --destructive: 0 65% 48%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 20%;
+    --input: 0 0% 92%;
+    --ring: 0 0% 15%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark theme - Sophisticated dark tones */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 90%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 90%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 90%;
   }
 }
 
@@ -61,127 +61,127 @@
 
   html {
     scroll-behavior: smooth;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 
   body {
-    @apply bg-background text-foreground font-inter antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-playfair font-medium;
+    @apply font-playfair;
+    font-weight: 500;
+    line-height: 1.2;
     letter-spacing: -0.02em;
   }
+
+  p {
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+  }
   
-  /* Perspective for 3D effects */
   .perspective-1000 {
     perspective: 1000px;
   }
 }
 
 @layer components {
-  /* Modern art card with enhanced spacing and 3D effects */
+  /* Modern art card with clean styling */
   .art-card {
-    @apply bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30;
-    transform-style: preserve-3d;
+    @apply bg-card border border-border/30 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-border/60;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
   
-  /* Lighter hero background */
-  .hero-bg {
-    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
+  .art-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
   
-  /* Modern button with white accent and dynamic effects */
+  /* Clean button styling */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/50 hover:scale-105 relative overflow-hidden;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium font-inter transition-all duration-200 hover:bg-primary/90 hover:shadow-md relative overflow-hidden;
   }
   
-  /* Enhanced glow effect with animation */
-  .btn-primary:hover {
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.2);
-    animation: glow-pulse 2s ease-in-out infinite alternate;
-  }
-  
-  /* Text glow for headings */
-  .text-glow {
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);
-  }
-
-  /* Lighter section backgrounds */
-  .section-black {
-    @apply bg-gray-800;
-  }
-
-  /* Enhanced spacing utility */
+  /* Section spacing with better rhythm */
   .section-spacing {
-    @apply py-32 md:py-40;
+    @apply py-20 md:py-28;
   }
 
-  /* Gallery spacing */
-  .gallery-spacing {
-    @apply gap-12 md:gap-16 lg:gap-20;
+  /* Gallery grid with proper spacing */
+  .gallery-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8;
   }
   
-  /* Dynamic hover effects */
+  /* Typography utilities */
+  .text-large {
+    @apply text-lg md:text-xl;
+    line-height: 1.7;
+  }
+  
+  .text-body {
+    @apply text-base;
+    line-height: 1.7;
+  }
+  
+  /* Hover effects */
   .hover-lift {
-    @apply transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl;
+    @apply transition-transform duration-200 hover:-translate-y-1;
   }
   
-  /* Floating animation */
-  .float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  /* Shimmer effect */
-  .shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+  /* Header styling */
+  .header-nav {
+    @apply bg-background/80 backdrop-blur-md border-b border-border/50;
   }
 }
 
-/* Enhanced animations */
-@keyframes float {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  50% { 
-    transform: translateY(-15px) rotate(2deg); 
-  }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes glow-pulse {
-  0% { 
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.1);
-  }
-  100% { 
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.3);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Custom scrollbar with glow */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.4s ease-out;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-  border-radius: 4px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  background: hsl(var(--border));
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  background: hsl(var(--primary));
 }
