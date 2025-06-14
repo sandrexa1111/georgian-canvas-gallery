@@ -11,11 +11,11 @@ export const HomeSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden section-black">
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-900">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gray-300/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
       </div>
       
       <div className="absolute inset-0 opacity-10">
@@ -40,22 +40,21 @@ export const HomeSection = () => {
             className="space-y-6"
           >
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full text-primary text-sm font-dm-sans"
-              animate={{ glow: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white text-sm font-dm-sans"
             >
-              <Sparkles size={16} className="animate-pulse-glow" />
+              <Sparkles size={16} className="animate-pulse" />
               Georgian Contemporary Artist
             </motion.div>
             
-            <h1 className="font-playfair text-6xl md:text-8xl lg:text-9xl font-semibold text-white text-glow leading-none tracking-tight">
+            <h1 className="font-playfair text-6xl md:text-8xl lg:text-9xl font-semibold text-white leading-none tracking-tight">
               Levan
               <br />
-              <span className="text-primary">Mosiashvili</span>
+              <span className="text-white">Mosiashvili</span>
             </h1>
           </motion.div>
           
           <motion.p 
-            className="text-xl md:text-2xl lg:text-3xl text-gray-300 max-w-4xl mx-auto font-inter font-light leading-relaxed"
+            className="text-xl md:text-2xl lg:text-3xl text-gray-200 max-w-4xl mx-auto font-inter font-light leading-relaxed"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
@@ -72,7 +71,7 @@ export const HomeSection = () => {
           >
             <motion.button
               onClick={() => scrollToSection('gallery')}
-              className="btn-primary flex items-center gap-3 text-lg font-dm-sans font-medium"
+              className="bg-white text-gray-900 px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-gray-100 hover:shadow-lg hover:scale-105 flex items-center gap-3 text-lg font-dm-sans"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -83,7 +82,7 @@ export const HomeSection = () => {
             
             <motion.button
               onClick={() => scrollToSection('about')}
-              className="px-8 py-4 border-2 border-primary/40 text-primary rounded-full font-dm-sans font-medium transition-all duration-300 hover:bg-primary/10 hover:border-primary hover:shadow-lg hover:shadow-primary/30 flex items-center gap-3"
+              className="px-8 py-4 border-2 border-white/40 text-white rounded-full font-dm-sans font-medium transition-all duration-300 hover:bg-white/10 hover:border-white hover:shadow-lg flex items-center gap-3"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >

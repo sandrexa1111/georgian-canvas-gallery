@@ -7,50 +7,50 @@
 
 @layer base {
   :root {
-    /* Dark theme (default) - Pure black with artistic accents */
-    --background: 0 0% 3%;
-    --foreground: 45 10% 92%;
-    --card: 0 0% 6%;
-    --card-foreground: 45 10% 92%;
-    --popover: 0 0% 6%;
-    --popover-foreground: 45 10% 92%;
-    --primary: 43 84% 55%; /* Dark gold accent */
-    --primary-foreground: 0 0% 3%;
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 45 10% 92%;
-    --muted: 0 0% 8%;
-    --muted-foreground: 45 5% 65%;
-    --accent: 15 85% 45%; /* Rust/deep red accent */
-    --accent-foreground: 45 10% 92%;
+    /* Dark theme - Lighter grays with white accents */
+    --background: 0 0% 12%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 16%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 16%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 100%; /* Pure white accent */
+    --primary-foreground: 0 0% 12%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 0 0% 85%; /* Light gray accent */
+    --accent-foreground: 0 0% 12%;
     --destructive: 0 65% 58%;
-    --destructive-foreground: 45 10% 92%;
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
-    --ring: 43 84% 55%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 0 0% 100%;
     --radius: 0.75rem;
   }
 
   .light {
-    /* Light theme - Off-white/muted beige, never pure white */
-    --background: 45 25% 96%;
-    --foreground: 0 0% 8%;
-    --card: 45 30% 94%;
-    --card-foreground: 0 0% 8%;
-    --popover: 45 30% 94%;
-    --popover-foreground: 0 0% 8%;
-    --primary: 43 74% 45%; /* Darker gold for contrast */
-    --primary-foreground: 45 25% 96%;
-    --secondary: 45 20% 88%;
-    --secondary-foreground: 0 0% 8%;
-    --muted: 45 20% 88%;
-    --muted-foreground: 0 0% 35%;
-    --accent: 15 75% 35%; /* Darker rust for contrast */
-    --accent-foreground: 45 25% 96%;
+    /* Light theme - Much lighter overall */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+    --primary: 0 0% 20%; /* Dark gray for contrast */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 90%; /* Light gray accent */
+    --accent-foreground: 0 0% 15%;
     --destructive: 0 65% 48%;
-    --destructive-foreground: 45 25% 96%;
-    --border: 45 20% 82%;
-    --input: 45 20% 82%;
-    --ring: 43 74% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 20%;
   }
 }
 
@@ -80,31 +80,31 @@
     @apply bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30;
   }
   
-  /* Black hero background */
+  /* Lighter hero background */
   .hero-bg {
-    background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
   }
   
-  /* Modern glowing button */
+  /* Modern button with white accent */
   .btn-primary {
     @apply bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/50 hover:scale-105;
-    box-shadow: 0 0 20px rgba(218, 165, 32, 0.3);
-    border: 1px solid rgba(218, 165, 32, 0.4);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
   
-  /* Neon glow effect */
+  /* White glow effect */
   .btn-primary:hover {
-    box-shadow: 0 0 30px rgba(218, 165, 32, 0.6), 0 0 60px rgba(218, 165, 32, 0.4);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.2);
   }
   
   /* Text glow for headings */
   .text-glow {
-    text-shadow: 0 0 30px rgba(218, 165, 32, 0.8), 0 0 60px rgba(218, 165, 32, 0.4);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);
   }
 
-  /* Black section backgrounds */
+  /* Lighter section backgrounds */
   .section-black {
-    @apply bg-black;
+    @apply bg-gray-800;
   }
 
   /* Enhanced spacing utility */
