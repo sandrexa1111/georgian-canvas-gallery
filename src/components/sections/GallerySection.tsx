@@ -453,7 +453,7 @@ export const GallerySection = () => {
                 >
                   {artwork.description}
                 </motion.p>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
