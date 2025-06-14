@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArtworkModal } from '@/components/ArtworkModal';
 
 interface Artwork {
@@ -79,25 +79,46 @@ const artworks: Artwork[] = [
 
 export const GallerySection = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
+        staggerChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, y: 60, rotateX: 15 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      rotateX: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
   };
 
   return (
-    <section id="gallery" className="section-spacing min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+    <section id="gallery" className="section-spacing min-h-screen relative overflow-hidden">
+      {/* Dynamic background elements */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: backgroundY }}
+      >
+        <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/5 w-96 h-96 bg-white/3 rounded-full blur-3xl" />
+      </motion.div>
+
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         <motion.div 
           className="text-center mb-24 space-y-8"
           initial={{ opacity: 0, y: 40 }}
@@ -105,13 +126,35 @@ export const GallerySection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-playfair text-5xl md:text-7xl font-semibold">
-            Art <span className="text-primary">Gallery</span>
-          </h2>
-          <p className="text-muted-foreground text-xl md:text-2xl max-w-4xl mx-auto font-inter leading-relaxed">
+          <motion.h2 
+            className="font-playfair text-5xl md:text-7xl font-semibold"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            Art <motion.span 
+              className="text-primary"
+              animate={{ 
+                textShadow: [
+                  "0 0 10px rgba(255, 255, 255, 0.3)",
+                  "0 0 20px rgba(255, 255, 255, 0.5)",
+                  "0 0 10px rgba(255, 255, 255, 0.3)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              Gallery
+            </motion.span>
+          </motion.h2>
+          <motion.p 
+            className="text-muted-foreground text-xl md:text-2xl max-w-4xl mx-auto font-inter leading-relaxed"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
             Explore a collection of paintings that capture the essence of Georgian culture, 
             from traditional landscapes to contemporary abstract expressions.
-          </p>
+          </motion.p>
         </motion.div>
 
         <motion.div 
@@ -121,47 +164,131 @@ export const GallerySection = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {artworks.map((artwork) => (
+          {artworks.map((artwork, index) => (
             <motion.div
               key={artwork.id}
               variants={itemVariants}
-              className="art-card cursor-pointer group"
+              className="art-card cursor-pointer group perspective-1000"
               onClick={() => setSelectedArtwork(artwork)}
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              onHoverStart={() => setHoveredCard(artwork.id)}
+              onHoverEnd={() => setHoveredCard(null)}
+              whileHover={{ 
+                y: -12,
+                rotateY: hoveredCard === artwork.id ? 5 : 0,
+                scale: 1.02
+              }}
+              transition={{ 
+                duration: 0.4, 
+                ease: "easeOut",
+                type: "spring",
+                stiffness: 300,
+                damping: 30
+              }}
+              style={{
+                transformStyle: "preserve-3d"
+              }}
             >
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden rounded-xl">
                 <motion.img
                   src={artwork.image}
                   alt={artwork.title}
-                  className="w-full h-96 object-cover transition-transform duration-700"
-                  whileHover={{ scale: 1.08 }}
+                  className="w-full h-96 object-cover"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 />
+                
+                {/* Dynamic overlay with particles effect */}
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
                 >
+                  {/* Animated particles */}
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white/60 rounded-full"
+                      style={{
+                        left: `${20 + (i * 10)}%`,
+                        top: `${30 + (i * 8)}%`
+                      }}
+                      animate={hoveredCard === artwork.id ? {
+                        scale: [0, 1, 0],
+                        opacity: [0, 1, 0],
+                        y: [0, -20, -40]
+                      } : {}}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.2
+                      }}
+                    />
+                  ))}
+                  
                   <div className="absolute bottom-6 left-6 text-white space-y-2">
-                    <div className="inline-block px-3 py-1 bg-primary/20 border border-primary/30 rounded-full text-xs text-primary font-dm-sans font-medium">
+                    <motion.div 
+                      className="inline-block px-3 py-1 bg-primary/30 border border-primary/50 rounded-full text-xs text-primary font-dm-sans font-medium backdrop-blur-sm"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       {artwork.category}
-                    </div>
-                    <h3 className="font-playfair text-2xl font-semibold">{artwork.title}</h3>
-                    <p className="text-sm text-gray-300 font-inter">{artwork.year}</p>
+                    </motion.div>
+                    <motion.h3 
+                      className="font-playfair text-2xl font-semibold"
+                      initial={{ x: -20, opacity: 0 }}
+                      whileHover={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {artwork.title}
+                    </motion.h3>
+                    <motion.p 
+                      className="text-sm text-gray-300 font-inter"
+                      initial={{ x: -20, opacity: 0 }}
+                      whileHover={{ x: 0, opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      {artwork.year}
+                    </motion.p>
                   </div>
                 </motion.div>
               </div>
               
-              <div className="p-8 space-y-4">
-                <h3 className="font-playfair text-2xl font-semibold">{artwork.title}</h3>
+              <motion.div 
+                className="p-8 space-y-4"
+                whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
+                transition={{ duration: 0.3 }}
+              >
+                <motion.h3 
+                  className="font-playfair text-2xl font-semibold"
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {artwork.title}
+                </motion.h3>
                 <div className="space-y-1 text-muted-foreground font-inter">
-                  <p className="text-sm">{artwork.dimensions} • {artwork.medium}</p>
-                  <p className="text-sm">{artwork.year}</p>
+                  <motion.p 
+                    className="text-sm"
+                    whileHover={{ x: 3 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {artwork.dimensions} • {artwork.medium}
+                  </motion.p>
+                  <motion.p 
+                    className="text-sm"
+                    whileHover={{ x: 3 }}
+                    transition={{ duration: 0.2, delay: 0.05 }}
+                  >
+                    {artwork.year}
+                  </motion.p>
                 </div>
-                <p className="text-muted-foreground leading-relaxed font-inter line-clamp-3">
+                <motion.p 
+                  className="text-muted-foreground leading-relaxed font-inter line-clamp-3"
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
+                >
                   {artwork.description}
-                </p>
-              </div>
+                </motion.p>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>

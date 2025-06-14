@@ -72,12 +72,18 @@
     @apply font-playfair font-medium;
     letter-spacing: -0.02em;
   }
+  
+  /* Perspective for 3D effects */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
 }
 
 @layer components {
-  /* Modern art card with enhanced spacing */
+  /* Modern art card with enhanced spacing and 3D effects */
   .art-card {
     @apply bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30;
+    transform-style: preserve-3d;
   }
   
   /* Lighter hero background */
@@ -85,16 +91,17 @@
     background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #1f2937 100%);
   }
   
-  /* Modern button with white accent */
+  /* Modern button with white accent and dynamic effects */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/50 hover:scale-105;
+    @apply bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/50 hover:scale-105 relative overflow-hidden;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
   
-  /* White glow effect */
+  /* Enhanced glow effect with animation */
   .btn-primary:hover {
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.2);
+    animation: glow-pulse 2s ease-in-out infinite alternate;
   }
   
   /* Text glow for headings */
@@ -116,9 +123,50 @@
   .gallery-spacing {
     @apply gap-12 md:gap-16 lg:gap-20;
   }
+  
+  /* Dynamic hover effects */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl;
+  }
+  
+  /* Floating animation */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  /* Shimmer effect */
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
 }
 
-/* Custom scrollbar */
+/* Enhanced animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-15px) rotate(2deg); 
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse {
+  0% { 
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.1);
+  }
+  100% { 
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Custom scrollbar with glow */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -130,8 +178,10 @@
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--primary));
   border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.8);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
