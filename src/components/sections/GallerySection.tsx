@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArtworkModal } from '@/components/ArtworkModal';
@@ -183,9 +182,16 @@ export const GallerySection = () => {
     return categoryMatch && periodMatch;
   });
 
+  console.log('Filtered artworks:', filteredArtworks.length);
+  console.log('Current page:', currentPage);
+  console.log('Items per page:', itemsPerPage);
+
   const totalPages = Math.ceil(filteredArtworks.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentArtworks = filteredArtworks.slice(startIndex, startIndex + itemsPerPage);
+
+  console.log('Current artworks to display:', currentArtworks.length);
+  console.log('Sample artwork image path:', currentArtworks[0]?.image);
 
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
@@ -331,98 +337,67 @@ export const GallerySection = () => {
           viewport={{ once: true }}
           key={currentPage}
         >
-          {currentArtworks.map((artwork, index) => (
-            <motion.div
-              key={artwork.id}
-              variants={itemVariants}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="art-card cursor-pointer group"
-              onClick={() => setSelectedArtwork(artwork)}
-              onHoverStart={() => setHoveredCard(artwork.id)}
-              onHoverEnd={() => setHoveredCard(null)}
-              whileHover={{ y: -12, scale: 1.02 }}
-            >
-              <div className="relative overflow-hidden rounded-xl">
-                <motion.img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-96 object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                />
-                
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {[...Array(6)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-white/60 rounded-full"
-                      style={{
-                        left: `${20 + (i * 10)}%`,
-                        top: `${30 + (i * 8)}%`
-                      }}
-                      animate={hoveredCard === artwork.id ? {
-                        scale: [0, 1, 0],
-                        opacity: [0, 1, 0],
-                        y: [0, -20, -40]
-                      } : {}}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.2
-                      }}
-                    />
-                  ))}
+          {currentArtworks.map((artwork, index) => {
+            console.log(`Rendering artwork ${artwork.id}: ${artwork.title} with image: ${artwork.image}`);
+            return (
+              <motion.div
+                key={artwork.id}
+                variants={itemVariants}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="bg-card rounded-xl shadow-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
+                onClick={() => setSelectedArtwork(artwork)}
+                onHoverStart={() => setHoveredCard(artwork.id)}
+                onHoverEnd={() => setHoveredCard(null)}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
+                <div className="relative overflow-hidden">
+                  <img
+                    src={artwork.image}
+                    alt={artwork.title}
+                    className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${artwork.image}`);
+                      e.currentTarget.style.backgroundColor = '#f3f4f6';
+                      e.currentTarget.style.display = 'flex';
+                      e.currentTarget.style.alignItems = 'center';
+                      e.currentTarget.style.justifyContent = 'center';
+                      e.currentTarget.innerHTML = 'Image not found';
+                    }}
+                    onLoad={() => {
+                      console.log(`Successfully loaded image: ${artwork.image}`);
+                    }}
+                  />
                   
-                  <div className="absolute bottom-6 left-6 text-white space-y-2">
-                    <motion.div 
-                      className="inline-block px-3 py-1 bg-primary/30 border border-primary/50 rounded-full text-xs text-primary font-dm-sans font-medium backdrop-blur-sm"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {artwork.category}
-                    </motion.div>
-                    <motion.h3 
-                      className="font-playfair text-2xl font-semibold"
-                      initial={{ x: -20, opacity: 0 }}
-                      whileHover={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {artwork.title}
-                    </motion.h3>
-                    <motion.p 
-                      className="text-sm text-gray-300 font-inter"
-                      initial={{ x: -20, opacity: 0 }}
-                      whileHover={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 0.1 }}
-                    >
-                      {artwork.year} • {artwork.period}
-                    </motion.p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <div className="inline-block px-3 py-1 bg-primary/30 border border-primary/50 rounded-full text-xs text-primary font-medium backdrop-blur-sm mb-2">
+                        {artwork.category}
+                      </div>
+                      <h3 className="font-playfair text-xl font-semibold">
+                        {artwork.title}
+                      </h3>
+                      <p className="text-sm text-gray-300">
+                        {artwork.year} • {artwork.period}
+                      </p>
+                    </div>
                   </div>
-                </motion.div>
-              </div>
-              
-              <div className="p-8 space-y-4">
-                <h3 className="font-playfair text-2xl font-semibold">
-                  {artwork.title}
-                </h3>
-                <div className="space-y-1 text-muted-foreground font-inter">
-                  <p className="text-sm">
-                    {artwork.dimensions} • {artwork.medium}
-                  </p>
-                  <p className="text-sm">
-                    {artwork.year} • {artwork.period}
+                </div>
+                
+                <div className="p-6 space-y-3">
+                  <h3 className="font-playfair text-xl font-semibold">
+                    {artwork.title}
+                  </h3>
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <p>{artwork.dimensions} • {artwork.medium}</p>
+                    <p>{artwork.year} • {artwork.period}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-3">
+                    {artwork.description}
                   </p>
                 </div>
-                <p className="text-muted-foreground leading-relaxed font-inter line-clamp-3">
-                  {artwork.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         {/* Pagination */}
