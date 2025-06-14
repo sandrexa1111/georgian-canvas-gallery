@@ -51,8 +51,8 @@ const About = () => {
           
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <img
-              src="https://images.unsplash.com/photo-1472396961693-142e6e269027?w=600&h=700&fit=crop"
-              alt="Artist at work"
+              src="/lovable-uploads/b4055fae-25ae-46fb-9e55-0892fc0b76dc.png"
+              alt="Levan Mosiashvili in his studio"
               className="w-full h-96 object-cover rounded-lg shadow-xl"
             />
           </div>
