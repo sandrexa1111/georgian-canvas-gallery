@@ -187,7 +187,6 @@ export const GallerySection = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentArtworks = filteredArtworks.slice(startIndex, startIndex + itemsPerPage);
 
-  // Reset to page 1 when filters change
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
     setCurrentPage(1);
@@ -209,11 +208,10 @@ export const GallerySection = () => {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 60, rotateX: 15 },
+    hidden: { opacity: 0, y: 60 },
     visible: { 
       opacity: 1, 
-      y: 0, 
-      rotateX: 0
+      y: 0
     }
   };
 
@@ -324,8 +322,9 @@ export const GallerySection = () => {
           </div>
         </motion.div>
 
+        {/* Gallery Grid */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gallery-spacing"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -336,22 +335,12 @@ export const GallerySection = () => {
             <motion.div
               key={artwork.id}
               variants={itemVariants}
-              transition={{
-                duration: 0.8,
-                ease: "easeOut"
-              }}
-              className="art-card cursor-pointer group perspective-1000"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="art-card cursor-pointer group"
               onClick={() => setSelectedArtwork(artwork)}
               onHoverStart={() => setHoveredCard(artwork.id)}
               onHoverEnd={() => setHoveredCard(null)}
-              whileHover={{ 
-                y: -12,
-                rotateY: hoveredCard === artwork.id ? 5 : 0,
-                scale: 1.02
-              }}
-              style={{
-                transformStyle: "preserve-3d"
-              }}
+              whileHover={{ y: -12, scale: 1.02 }}
             >
               <div className="relative overflow-hidden rounded-xl">
                 <motion.img
@@ -362,14 +351,12 @@ export const GallerySection = () => {
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 />
                 
-                {/* Dynamic overlay with particles effect */}
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {/* Animated particles */}
                   {[...Array(6)].map((_, i) => (
                     <motion.div
                       key={i}
@@ -418,42 +405,22 @@ export const GallerySection = () => {
                 </motion.div>
               </div>
               
-              <motion.div 
-                className="p-8 space-y-4"
-                whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.02)" }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.h3 
-                  className="font-playfair text-2xl font-semibold"
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
+              <div className="p-8 space-y-4">
+                <h3 className="font-playfair text-2xl font-semibold">
                   {artwork.title}
-                </motion.h3>
+                </h3>
                 <div className="space-y-1 text-muted-foreground font-inter">
-                  <motion.p 
-                    className="text-sm"
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <p className="text-sm">
                     {artwork.dimensions} • {artwork.medium}
-                  </motion.p>
-                  <motion.p 
-                    className="text-sm"
-                    whileHover={{ x: 3 }}
-                    transition={{ duration: 0.2, delay: 0.05 }}
-                  >
+                  </p>
+                  <p className="text-sm">
                     {artwork.year} • {artwork.period}
-                  </motion.p>
+                  </p>
                 </div>
-                <motion.p 
-                  className="text-muted-foreground leading-relaxed font-inter line-clamp-3"
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
+                <p className="text-muted-foreground leading-relaxed font-inter line-clamp-3">
                   {artwork.description}
-                </motion.p>
-              </motion.div>
+                </p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
