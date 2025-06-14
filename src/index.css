@@ -7,39 +7,56 @@
   :root {
     --background: 25 25% 8%;
     --foreground: 40 15% 92%;
-
     --card: 25 20% 12%;
     --card-foreground: 40 15% 92%;
-
     --popover: 25 20% 12%;
     --popover-foreground: 40 15% 92%;
-
     --primary: 43 74% 66%;
     --primary-foreground: 25 25% 8%;
-
     --secondary: 25 15% 18%;
     --secondary-foreground: 40 15% 92%;
-
     --muted: 25 15% 18%;
     --muted-foreground: 35 10% 65%;
-
     --accent: 15 65% 45%;
     --accent-foreground: 40 15% 92%;
-
     --destructive: 0 65% 58%;
     --destructive-foreground: 40 15% 92%;
-
     --border: 25 15% 22%;
     --input: 25 15% 22%;
     --ring: 43 74% 66%;
-
     --radius: 0.5rem;
+  }
+
+  .light {
+    --background: 39 100% 97%;
+    --foreground: 25 25% 8%;
+    --card: 39 50% 95%;
+    --card-foreground: 25 25% 8%;
+    --popover: 39 50% 95%;
+    --popover-foreground: 25 25% 8%;
+    --primary: 43 74% 66%;
+    --primary-foreground: 25 25% 8%;
+    --secondary: 39 20% 88%;
+    --secondary-foreground: 25 25% 8%;
+    --muted: 39 20% 88%;
+    --muted-foreground: 35 10% 35%;
+    --accent: 15 65% 45%;
+    --accent-foreground: 39 100% 97%;
+    --destructive: 0 65% 58%;
+    --destructive-foreground: 39 100% 97%;
+    --border: 39 20% 85%;
+    --input: 39 20% 85%;
+    --ring: 43 74% 66%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
