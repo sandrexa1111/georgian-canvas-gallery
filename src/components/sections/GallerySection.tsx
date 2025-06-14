@@ -102,7 +102,7 @@ export const GallerySection = () => {
       rotateX: 0,
       transition: {
         duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94]
+        ease: "easeOut"
       }
     }
   };
@@ -183,7 +183,7 @@ export const GallerySection = () => {
               }}
               transition={{ 
                 duration: 0.4, 
-                ease: [0.25, 0.46, 0.45, 0.94],
+                ease: "easeOut",
                 type: "spring",
                 stiffness: 300,
                 damping: 30
@@ -198,7 +198,7 @@ export const GallerySection = () => {
                   alt={artwork.title}
                   className="w-full h-96 object-cover"
                   whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 />
                 
                 {/* Dynamic overlay with particles effect */}

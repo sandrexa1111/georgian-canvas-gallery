@@ -90,7 +90,6 @@ export const ScrollNavigation = () => {
                   <motion.div
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
                     layoutId="activeTab"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     animate={{
                       boxShadow: [
                         "0 0 5px rgba(255, 255, 255, 0.3)",
@@ -98,10 +97,15 @@ export const ScrollNavigation = () => {
                       ]
                     }}
                     transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse",
-                      ease: "easeInOut"
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 30,
+                      boxShadow: {
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut"
+                      }
                     }}
                   />
                 )}
