@@ -13,7 +13,7 @@ export const ScrollNavigation = () => {
   const backgroundColor = useTransform(
     scrollYProgress,
     [0, 0.1],
-    ["rgba(255, 255, 255, 0.8)", "rgba(255, 255, 255, 0.95)"]
+    [theme === 'dark' ? "rgba(4, 4, 4, 0.8)" : "rgba(255, 255, 255, 0.8)", theme === 'dark' ? "rgba(4, 4, 4, 0.95)" : "rgba(255, 255, 255, 0.95)"]
   );
 
   const navItems = [
@@ -57,10 +57,10 @@ export const ScrollNavigation = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex justify-between items-center h-20">
           <motion.div
-            className="font-playfair text-xl font-medium text-primary cursor-pointer"
+            className="font-playfair text-2xl font-medium text-primary cursor-pointer"
             onClick={() => scrollToSection('home')}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -69,12 +69,12 @@ export const ScrollNavigation = () => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-12">
             {navItems.map((item) => (
               <motion.button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`px-3 py-2 text-sm font-medium font-inter transition-all duration-200 relative ${
+                className={`px-4 py-3 text-base font-medium font-inter transition-all duration-300 relative ${
                   activeSection === item.id
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-foreground'
@@ -94,11 +94,11 @@ export const ScrollNavigation = () => {
             ))}
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             {/* Theme Toggle */}
             <motion.button
               onClick={toggleTheme}
-              className="p-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors"
+              className="p-3 rounded-full bg-secondary/60 hover:bg-secondary transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -106,18 +106,18 @@ export const ScrollNavigation = () => {
                 animate={{ rotate: theme === 'dark' ? 0 : 180 }}
                 transition={{ duration: 0.3 }}
               >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
               </motion.div>
             </motion.button>
 
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors"
+              className="md:hidden p-3 rounded-full bg-secondary/60 hover:bg-secondary transition-colors"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </motion.button>
           </div>
         </div>
@@ -130,19 +130,19 @@ export const ScrollNavigation = () => {
             height: isMobileMenuOpen ? 'auto' : 0 
           }}
           transition={{ duration: 0.3 }}
-          className="md:hidden overflow-hidden border-t border-border/50"
+          className="md:hidden overflow-hidden border-t border-border/30"
         >
-          <div className="py-4 space-y-2">
+          <div className="py-6 space-y-3">
             {navItems.map((item) => (
               <motion.button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left px-3 py-2 text-base font-medium font-inter transition-colors ${
+                className={`block w-full text-left px-4 py-3 text-lg font-medium font-inter transition-colors rounded-md ${
                   activeSection === item.id
                     ? 'text-primary bg-primary/5'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }`}
-                whileHover={{ x: 4 }}
+                whileHover={{ x: 6 }}
                 whileTap={{ x: 0 }}
               >
                 {item.label}

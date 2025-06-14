@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 export const AboutSection = () => {
   return (
-    <section id="about" className="section-spacing min-h-screen flex items-center bg-gray-700">
+    <section id="about" className="section-spacing min-h-screen flex items-center bg-background">
       <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12">
         <motion.div 
-          className="text-center space-y-16"
+          className="text-center space-y-20"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -19,13 +19,13 @@ export const AboutSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="font-playfair text-5xl md:text-7xl font-semibold text-white">
-              About the <span className="text-white">Artist</span>
+            <h2 className="font-playfair text-5xl md:text-7xl font-semibold text-foreground">
+              About the <span className="text-primary">Artist</span>
             </h2>
           </motion.div>
           
           <motion.blockquote 
-            className="text-2xl md:text-4xl lg:text-5xl font-playfair italic text-gray-200 leading-relaxed max-w-5xl mx-auto"
+            className="text-2xl md:text-4xl lg:text-5xl font-playfair italic text-muted-foreground leading-relaxed max-w-5xl mx-auto"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -37,7 +37,7 @@ export const AboutSection = () => {
           </motion.blockquote>
           
           <motion.p 
-            className="text-white font-semibold text-2xl font-dm-sans"
+            className="text-primary font-semibold text-2xl font-inter"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -54,8 +54,8 @@ export const AboutSection = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <div className="space-y-8">
-              <h3 className="font-playfair text-3xl font-semibold text-white">Heritage & Vision</h3>
-              <p className="text-lg text-gray-200 font-inter leading-relaxed">
+              <h3 className="font-playfair text-3xl font-semibold text-foreground">Heritage & Vision</h3>
+              <p className="text-lg text-muted-foreground font-inter leading-relaxed">
                 Born and raised in the heart of Georgia, Levan Mosiashvili has dedicated his life to capturing 
                 the essence of Georgian culture through his art. His work spans traditional landscapes, 
                 intricate portraits, and modern abstract pieces that reflect the evolving spirit of his homeland.
@@ -63,8 +63,8 @@ export const AboutSection = () => {
             </div>
             
             <div className="space-y-8">
-              <h3 className="font-playfair text-3xl font-semibold text-white">Recognition & Impact</h3>
-              <p className="text-lg text-gray-200 font-inter leading-relaxed">
+              <h3 className="font-playfair text-3xl font-semibold text-foreground">Recognition & Impact</h3>
+              <p className="text-lg text-muted-foreground font-inter leading-relaxed">
                 With over two decades of artistic experience, Levan's paintings have been featured in galleries 
                 across Europe and continue to inspire art lovers around the world, bridging cultural divides 
                 through the universal language of visual expression.
