@@ -1,5 +1,6 @@
 
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 export const AboutSection = () => {
   return (
@@ -53,31 +54,37 @@ export const AboutSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <div className="space-y-6">
+            <div className="space-y-8">
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                Levan Mosiashvili was born in 1971 in Tbilisi. In 1993 he graduated from the Forestry Faculty of the Georgian Agrarian University, while simultaneously studying the profession of theater director. In 1996 he received the degree of Candidate of Biological Sciences from the Tbilisi State Agrarian University.
+                Born in 1971 in Tbilisi, Levan Mosiashvili is a distinguished Georgian artist whose journey spans 
+                from biological sciences to becoming an internationally recognized painter. A self-taught artist 
+                with four distinct art periods - Georgian, French, Modern, and Abstract - his work has captured 
+                the hearts of collectors across the globe.
               </p>
               
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                Drawing has been his calling since childhood, even during the communist period, he has received honorary awards and diplomas. He is a self-taught artist and he works with different kind of techniques on canvases. He already has 4 types of art periods: Georgian, French, Modern and abstract.
-              </p>
-              
-              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                As a result of winning many international art competitions, he left Georgia in 2008, by the suggestion of the French government and became the first Georgian to be granted the status of a talent passport. Since then, he has been living in Tbilisi and southern France. Levan's winnings successfully continued in Europe.
-              </p>
-              
-              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                Mosiashvili's works are preserved in private collections and galleries in many countries: Georgia, France, Russia, USA, Germany, Switzerland, Italy, Uruguay, Venezuela, Japan, Canada, New Zealand, Australia, Turkey, Belgium, England, Brazil, Chile, Sweden, Norway, China. In most of them, he had group and personal exhibitions.
-              </p>
-              
-              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                His works have been presented as gifts to presidents and state officials of several countries on behalf of the Georgian state. Levan Mosiashvili is the co-founder and administrator of the French-Georgian cultural association "Georgia Center", and has also been the head of the International Club of Friends of the National Library of the Parliament of Georgia since 2015.
-              </p>
-              
-              <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                He regularly participates in charity auctions and donates royalties to various beneficiaries. Latest exhibitions and participations were held at "art Dubai 2022" and "Art New York 2023" where one of his painting was awarded between twelve best worldwide artists, his painting was awarded as a one of the most successful painting of the year.
+                Granted the prestigious talent passport by the French government in 2008, Levan became the first 
+                Georgian to receive this honor. His paintings now grace private collections and galleries across 
+                multiple continents, and his recent work was recognized as one of the most successful paintings 
+                of the year at Art New York 2023.
               </p>
             </div>
+
+            <motion.div 
+              className="mt-12 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <a
+                href="/about"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium text-lg transition-all duration-300 hover:bg-primary/90 hover:scale-105 hover:shadow-lg group"
+              >
+                Discover the Full Story
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </a>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
