@@ -17,63 +17,63 @@ interface Artwork {
 const artworks: Artwork[] = [
   {
     id: 1,
-    title: "Sunset Over Kakheti",
-    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+    title: "Golden Village",
+    image: "/lovable-uploads/92b785c0-0831-46a3-ad0f-5c6a095c8d19.png",
     dimensions: "80 x 60 cm",
     medium: "Oil on Canvas",
     year: 2023,
-    description: "A breathtaking view of the Kakheti wine region during golden hour, capturing the rolling hills and vineyards that define Georgian countryside.",
+    description: "A vibrant depiction of traditional Georgian architecture with warm golden tones, showcasing the harmony between rural life and natural beauty.",
     category: "Landscape"
   },
   {
     id: 2,
-    title: "Abstract Portrait III",
-    image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
+    title: "Woman in Red Headscarf",
+    image: "/lovable-uploads/c8a6f9c1-2bf7-4772-8861-49272f578733.png",
     dimensions: "70 x 50 cm",
-    medium: "Acrylic on Canvas",
+    medium: "Mixed Media",
     year: 2023,
-    description: "An exploration of human emotion through abstract forms and warm lighting, representing the complexity of the human spirit.",
+    description: "A powerful portrait featuring traditional Georgian motifs and patterns, celebrating the strength and beauty of Georgian women.",
     category: "Portrait"
   },
   {
     id: 3,
-    title: "Mountain Harmony",
-    image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb",
-    dimensions: "100 x 70 cm",
-    medium: "Oil on Canvas",
+    title: "Garden of Joy",
+    image: "/lovable-uploads/f4bf28cf-5a78-4850-ac2f-0da3ac18d60e.png",
+    dimensions: "90 x 70 cm",
+    medium: "Acrylic on Canvas",
     year: 2022,
-    description: "The majestic Caucasus mountains reflected in pristine waters, symbolizing the eternal dialogue between earth and sky.",
-    category: "Landscape"
+    description: "An explosion of colorful flowers and patterns creating a joyful celebration of nature's abundance and the beauty of Georgian gardens.",
+    category: "Still Life"
   },
   {
     id: 4,
-    title: "Forest Dreams",
-    image: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
-    dimensions: "60 x 80 cm",
-    medium: "Mixed Media",
+    title: "Midnight Village",
+    image: "/lovable-uploads/6f1afc91-f743-481a-8885-e127cc111d5f.png",
+    dimensions: "100 x 80 cm",
+    medium: "Oil on Canvas",
     year: 2023,
-    description: "Sunbeams piercing through dense Georgian forest, creating a mystical atmosphere that speaks to the soul.",
-    category: "Surrealism"
+    description: "A mystical nighttime scene of a Georgian village under the moonlight, painted in deep blues that evoke tranquility and contemplation.",
+    category: "Landscape"
   },
   {
     id: 5,
-    title: "Urban Contemplation",
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
-    dimensions: "90 x 60 cm",
-    medium: "Oil on Canvas",
-    year: 2023,
-    description: "A modern interior space that reflects contemporary Georgian life, blending traditional warmth with modern aesthetics.",
-    category: "Modern"
+    title: "Saint George and the Dragon",
+    image: "/lovable-uploads/74d1fbce-2058-422e-82d9-3daf3dd000e6.png",
+    dimensions: "85 x 65 cm",
+    medium: "Mixed Media",
+    year: 2022,
+    description: "A modern interpretation of Georgia's patron saint, blending traditional iconography with contemporary artistic expression.",
+    category: "Religious"
   },
   {
     id: 6,
-    title: "Nature's Offering",
-    image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9",
-    dimensions: "40 x 40 cm",
-    medium: "Watercolor",
-    year: 2022,
-    description: "A still life celebrating the abundance of Georgian harvest, painted with delicate watercolor techniques.",
-    category: "Still Life"
+    title: "Red Lady",
+    image: "/lovable-uploads/8f081d62-6772-48f8-aba5-e3f813da7c06.png",
+    dimensions: "75 x 60 cm",
+    medium: "Acrylic on Canvas",
+    year: 2023,
+    description: "A contemplative figure in vibrant reds and oranges, representing the warmth and passion of Georgian culture through abstract form.",
+    category: "Abstract"
   }
 ];
 
@@ -81,7 +81,7 @@ const Gallery = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [filter, setFilter] = useState<string>('All');
 
-  const categories = ['All', 'Landscape', 'Portrait', 'Surrealism', 'Modern', 'Still Life'];
+  const categories = ['All', 'Landscape', 'Portrait', 'Still Life', 'Religious', 'Abstract'];
 
   const filteredArtworks = filter === 'All' 
     ? artworks 
@@ -127,7 +127,7 @@ const Gallery = () => {
             >
               <div className="relative overflow-hidden">
                 <img
-                  src={`${artwork.image}?w=500&h=600&fit=crop`}
+                  src={artwork.image}
                   alt={artwork.title}
                   className="w-full h-80 object-cover transition-transform duration-500 hover:scale-110"
                 />

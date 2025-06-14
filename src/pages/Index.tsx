@@ -12,7 +12,7 @@ const Index = () => {
         {/* Featured Artwork Background */}
         <div className="absolute inset-0 opacity-20">
           <img
-            src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&h=1080&fit=crop"
+            src="/lovable-uploads/92b785c0-0831-46a3-ad0f-5c6a095c8d19.png"
             alt="Featured artwork background"
             className="w-full h-full object-cover"
           />
@@ -64,19 +64,19 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Sunset Over Kakheti",
-                image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05",
+                title: "Golden Village",
+                image: "/lovable-uploads/92b785c0-0831-46a3-ad0f-5c6a095c8d19.png",
                 category: "Landscape"
               },
               {
-                title: "Abstract Portrait III",
-                image: "https://images.unsplash.com/photo-1500673922987-e212871fec22",
+                title: "Woman in Red Headscarf",
+                image: "/lovable-uploads/c8a6f9c1-2bf7-4772-8861-49272f578733.png",
                 category: "Portrait"
               },
               {
-                title: "Mountain Harmony",
-                image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb",
-                category: "Surrealism"
+                title: "Garden of Joy",
+                image: "/lovable-uploads/f4bf28cf-5a78-4850-ac2f-0da3ac18d60e.png",
+                category: "Still Life"
               }
             ].map((artwork, index) => (
               <div
@@ -86,7 +86,7 @@ const Index = () => {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={`${artwork.image}?w=400&h=500&fit=crop`}
+                    src={artwork.image}
                     alt={artwork.title}
                     className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
                   />
