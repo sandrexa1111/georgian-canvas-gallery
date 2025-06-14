@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArtworkModal } from '@/components/ArtworkModal';
@@ -12,6 +13,7 @@ interface Artwork {
   year: number;
   description: string;
   category: string;
+  period: string;
 }
 
 const artworks: Artwork[] = [
@@ -23,7 +25,8 @@ const artworks: Artwork[] = [
     medium: "Oil on Canvas",
     year: 2023,
     description: "A vibrant depiction of traditional Georgian architecture with warm golden tones, showcasing the harmony between rural life and natural beauty.",
-    category: "Landscape"
+    category: "Landscape",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 2,
@@ -33,7 +36,8 @@ const artworks: Artwork[] = [
     medium: "Mixed Media",
     year: 2023,
     description: "A powerful portrait featuring traditional Georgian motifs and patterns, celebrating the strength and beauty of Georgian women.",
-    category: "Portrait"
+    category: "Portrait",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 3,
@@ -43,7 +47,8 @@ const artworks: Artwork[] = [
     medium: "Acrylic on Canvas",
     year: 2022,
     description: "An explosion of colorful flowers and patterns creating a joyful celebration of nature's abundance and the beauty of Georgian gardens.",
-    category: "Still Life"
+    category: "Still Life",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 4,
@@ -53,7 +58,8 @@ const artworks: Artwork[] = [
     medium: "Oil on Canvas",
     year: 2023,
     description: "A mystical nighttime scene of a Georgian village under the moonlight, painted in deep blues that evoke tranquility and contemplation.",
-    category: "Landscape"
+    category: "Landscape",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 5,
@@ -63,7 +69,8 @@ const artworks: Artwork[] = [
     medium: "Mixed Media",
     year: 2022,
     description: "A modern interpretation of Georgia's patron saint, blending traditional iconography with contemporary artistic expression.",
-    category: "Religious"
+    category: "Religious",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 6,
@@ -73,7 +80,8 @@ const artworks: Artwork[] = [
     medium: "Acrylic on Canvas",
     year: 2023,
     description: "A contemplative figure in vibrant reds and oranges, representing the warmth and passion of Georgian culture through abstract form.",
-    category: "Abstract"
+    category: "Abstract",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 7,
@@ -83,7 +91,8 @@ const artworks: Artwork[] = [
     medium: "Acrylic on Canvas",
     year: 2024,
     description: "A tender portrayal of motherhood featuring vibrant colors and symbolic elements, representing the bond between mother and child in Georgian culture.",
-    category: "Portrait"
+    category: "Portrait",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 8,
@@ -93,7 +102,8 @@ const artworks: Artwork[] = [
     medium: "Mixed Media",
     year: 2024,
     description: "A colorful representation of a traditional Georgian couple, showcasing the rich cultural heritage through folk art styling and vibrant patterns.",
-    category: "Portrait"
+    category: "Portrait",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 9,
@@ -103,7 +113,8 @@ const artworks: Artwork[] = [
     medium: "Oil on Canvas",
     year: 2024,
     description: "A lively scene depicting a traditional Georgian village celebration with multiple figures in traditional dress, capturing the communal spirit of Georgian culture.",
-    category: "Cultural Heritage"
+    category: "Cultural Heritage",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 10,
@@ -113,7 +124,8 @@ const artworks: Artwork[] = [
     medium: "Oil on Canvas",
     year: 2024,
     description: "A magnificent architectural composition featuring Georgian church towers and traditional buildings bathed in golden light.",
-    category: "Landscape"
+    category: "Landscape",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 11,
@@ -123,7 +135,8 @@ const artworks: Artwork[] = [
     medium: "Acrylic on Canvas",
     year: 2024,
     description: "Dynamic figures in traditional Georgian dance costumes, capturing the energy and grace of folk dance traditions.",
-    category: "Cultural Heritage"
+    category: "Cultural Heritage",
+    period: "Contemporary (2020-2024)"
   },
   {
     id: 12,
@@ -133,22 +146,57 @@ const artworks: Artwork[] = [
     medium: "Mixed Media",
     year: 2024,
     description: "An intimate portrait of a woman in traditional red veil, painted with warm earth tones that convey deep emotion and cultural identity.",
-    category: "Portrait"
+    category: "Portrait",
+    period: "Contemporary (2020-2024)"
   }
 ];
 
 export const GallerySection = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>('All');
+  const [periodFilter, setPeriodFilter] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
-  const totalPages = Math.ceil(artworks.length / itemsPerPage);
+  const categories = [
+    'All', 
+    'Landscape', 
+    'Portrait', 
+    'Still Life', 
+    'Religious', 
+    'Abstract',
+    'Cultural Heritage'
+  ];
+
+  const periods = [
+    'All',
+    'Contemporary (2020-2024)'
+  ];
+
+  const filteredArtworks = artworks.filter(artwork => {
+    const categoryMatch = categoryFilter === 'All' || artwork.category === categoryFilter;
+    const periodMatch = periodFilter === 'All' || artwork.period === periodFilter;
+    return categoryMatch && periodMatch;
+  });
+
+  const totalPages = Math.ceil(filteredArtworks.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentArtworks = artworks.slice(startIndex, startIndex + itemsPerPage);
+  const currentArtworks = filteredArtworks.slice(startIndex, startIndex + itemsPerPage);
+
+  // Reset to page 1 when filters change
+  const handleCategoryFilterChange = (category: string) => {
+    setCategoryFilter(category);
+    setCurrentPage(1);
+  };
+
+  const handlePeriodFilterChange = (period: string) => {
+    setPeriodFilter(period);
+    setCurrentPage(1);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -221,6 +269,59 @@ export const GallerySection = () => {
             Explore a collection of paintings that capture the essence of Georgian culture, 
             from traditional landscapes to contemporary abstract expressions.
           </motion.p>
+        </motion.div>
+
+        {/* Filters */}
+        <motion.div 
+          className="space-y-6 mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Period Filter */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">Filter by Period</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {periods.map((period) => (
+                <motion.button
+                  key={period}
+                  onClick={() => handlePeriodFilterChange(period)}
+                  className={`px-4 py-2 text-sm rounded-full transition-all duration-300 ${
+                    periodFilter === period
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {period}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">Filter by Category</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {categories.map((category) => (
+                <motion.button
+                  key={category}
+                  onClick={() => handleCategoryFilterChange(category)}
+                  className={`px-4 py-2 text-sm rounded-full transition-all duration-300 ${
+                    categoryFilter === category
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {category}
+                </motion.button>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
         <motion.div 
@@ -311,7 +412,7 @@ export const GallerySection = () => {
                       whileHover={{ x: 0, opacity: 1 }}
                       transition={{ duration: 0.3, delay: 0.1 }}
                     >
-                      {artwork.year}
+                      {artwork.year} • {artwork.period}
                     </motion.p>
                   </div>
                 </motion.div>
@@ -342,7 +443,7 @@ export const GallerySection = () => {
                     whileHover={{ x: 3 }}
                     transition={{ duration: 0.2, delay: 0.05 }}
                   >
-                    {artwork.year}
+                    {artwork.year} • {artwork.period}
                   </motion.p>
                 </div>
                 <motion.p 
@@ -352,7 +453,7 @@ export const GallerySection = () => {
                 >
                   {artwork.description}
                 </motion.p>
-              </motion.div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
