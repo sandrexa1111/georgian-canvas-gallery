@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { MapPin, Phone, Mail, MessageCircle, Send, Award } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -46,13 +47,13 @@ const Contact = () => {
     <>
       <Navigation />
       <div className="min-h-screen">
-        {/* Header Section - copied from home page with smaller text */}
+        {/* Header Section - neutral colors without yellow/gold */}
         <section className="min-h-[60vh] flex items-center justify-center relative overflow-hidden hero-gradient">
-          {/* Artistic background elements */}
+          {/* Artistic background elements - neutral colors */}
           <div className="absolute inset-0 opacity-15">
-            <div className="absolute top-20 left-10 w-72 h-72 bg-primary/25 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-primary/15 rounded-full blur-2xl" />
+            <div className="absolute top-20 left-10 w-72 h-72 bg-secondary/25 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-secondary/15 rounded-full blur-2xl" />
           </div>
 
           {/* Featured artwork overlay */}
@@ -67,14 +68,14 @@ const Contact = () => {
           
           <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 text-center">
             <div className="animate-fade-in">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-card/90 backdrop-blur-md border border-primary/30 rounded-full text-foreground text-sm font-inter shadow-lg mb-6">
-                <Award size={16} className="text-primary" />
+              <div className="inline-flex items-center gap-3 px-6 py-3 bg-card/90 backdrop-blur-md border border-border/30 rounded-full text-foreground text-sm font-inter shadow-lg mb-6">
+                <Award size={16} className="text-foreground" />
                 Contemporary Georgian Master Artist
               </div>
               
               <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-medium text-foreground leading-[0.9] tracking-tight drop-shadow-2xl mb-4">
                 <div className="text-shadow-lg">Get in</div>
-                <div className="text-primary drop-shadow-2xl">Touch</div>
+                <div className="text-foreground drop-shadow-2xl">Touch</div>
               </h1>
               
               <p className="text-lg md:text-xl text-foreground/90 max-w-2xl mx-auto font-inter font-light leading-relaxed drop-shadow-lg">
@@ -95,8 +96,8 @@ const Contact = () => {
                 
                 <div className="space-y-6 mb-8">
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/20 p-3 rounded-full">
-                      <MapPin className="text-primary" size={24} />
+                    <div className="bg-secondary/60 p-3 rounded-full">
+                      <MapPin className="text-foreground" size={24} />
                     </div>
                     <div>
                       <h3 className="font-semibold">Location</h3>
@@ -105,14 +106,14 @@ const Contact = () => {
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/20 p-3 rounded-full">
-                      <Mail className="text-primary" size={24} />
+                    <div className="bg-secondary/60 p-3 rounded-full">
+                      <Mail className="text-foreground" size={24} />
                     </div>
                     <div>
                       <h3 className="font-semibold">Email</h3>
                       <a
                         href="mailto:info@levanmosiashvili.com"
-                        className="text-primary hover:text-primary/80 transition-colors"
+                        className="text-foreground hover:text-foreground/80 transition-colors"
                       >
                         info@levanmosiashvili.com
                       </a>
@@ -120,8 +121,8 @@ const Contact = () => {
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <div className="bg-primary/20 p-3 rounded-full">
-                      <MessageCircle className="text-primary" size={24} />
+                    <div className="bg-secondary/60 p-3 rounded-full">
+                      <MessageCircle className="text-foreground" size={24} />
                     </div>
                     <div>
                       <h3 className="font-semibold">WhatsApp</h3>
@@ -129,7 +130,7 @@ const Contact = () => {
                         href="https://wa.me/995555123456"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80 transition-colors"
+                        className="text-foreground hover:text-foreground/80 transition-colors"
                       >
                         Quick message via WhatsApp
                       </a>
@@ -141,19 +142,19 @@ const Contact = () => {
                   <h3 className="font-playfair text-xl font-semibold mb-4">What We Offer</h3>
                   <ul className="space-y-3 text-muted-foreground">
                     <li className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-foreground rounded-full mt-2 flex-shrink-0"></div>
                       <span>Original artwork sales with certificates of authenticity</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-foreground rounded-full mt-2 flex-shrink-0"></div>
                       <span>Custom commissioned paintings for homes and businesses</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-foreground rounded-full mt-2 flex-shrink-0"></div>
                       <span>Professional framing and shipping worldwide</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-foreground rounded-full mt-2 flex-shrink-0"></div>
                       <span>Art consultation for collectors and interior designers</span>
                     </li>
                   </ul>
@@ -177,7 +178,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
                         placeholder="Your full name"
                       />
                     </div>
@@ -193,7 +194,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
                         placeholder="your.email@example.com"
                       />
                     </div>
@@ -209,7 +210,7 @@ const Contact = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all"
                       placeholder="What's this about?"
                     />
                   </div>
@@ -225,7 +226,7 @@ const Contact = () => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-vertical"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-foreground focus:border-transparent transition-all resize-vertical"
                       placeholder="Tell us about your interest in the artwork, commission details, or any questions you have..."
                     />
                   </div>
