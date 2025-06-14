@@ -99,11 +99,7 @@ export const GallerySection = () => {
     visible: { 
       opacity: 1, 
       y: 0, 
-      rotateX: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
+      rotateX: 0
     }
   };
 
@@ -172,6 +168,10 @@ export const GallerySection = () => {
             <motion.div
               key={artwork.id}
               variants={itemVariants}
+              transition={{
+                duration: 0.8,
+                ease: "easeOut"
+              }}
               className="art-card cursor-pointer group perspective-1000"
               onClick={() => setSelectedArtwork(artwork)}
               onHoverStart={() => setHoveredCard(artwork.id)}
@@ -180,13 +180,6 @@ export const GallerySection = () => {
                 y: -12,
                 rotateY: hoveredCard === artwork.id ? 5 : 0,
                 scale: 1.02
-              }}
-              transition={{ 
-                duration: 0.4, 
-                ease: "easeOut",
-                type: "spring",
-                stiffness: 300,
-                damping: 30
               }}
               style={{
                 transformStyle: "preserve-3d"
@@ -292,7 +285,7 @@ export const GallerySection = () => {
                 >
                   {artwork.description}
                 </motion.p>
-              </motion.div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
