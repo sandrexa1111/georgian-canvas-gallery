@@ -1,7 +1,7 @@
-
 import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArtworkModal } from '@/components/ArtworkModal';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
 interface Artwork {
   id: number;
@@ -74,15 +74,81 @@ const artworks: Artwork[] = [
     year: 2023,
     description: "A contemplative figure in vibrant reds and oranges, representing the warmth and passion of Georgian culture through abstract form.",
     category: "Abstract"
+  },
+  {
+    id: 7,
+    title: "Mother and Child with Bird",
+    image: "/lovable-uploads/bd676107-6b4f-4066-8a4d-e617fc85ae1e.png",
+    dimensions: "85 x 70 cm",
+    medium: "Acrylic on Canvas",
+    year: 2024,
+    description: "A tender portrayal of motherhood featuring vibrant colors and symbolic elements, representing the bond between mother and child in Georgian culture.",
+    category: "Portrait"
+  },
+  {
+    id: 8,
+    title: "Georgian Couple",
+    image: "/lovable-uploads/50ae435f-dccd-44a0-ba4e-864c46d0405e.png",
+    dimensions: "80 x 65 cm",
+    medium: "Mixed Media",
+    year: 2024,
+    description: "A colorful representation of a traditional Georgian couple, showcasing the rich cultural heritage through folk art styling and vibrant patterns.",
+    category: "Portrait"
+  },
+  {
+    id: 9,
+    title: "Village Celebration",
+    image: "/lovable-uploads/5030fc45-5a3e-48ce-b2d1-45ac8e719910.png",
+    dimensions: "100 x 80 cm",
+    medium: "Oil on Canvas",
+    year: 2024,
+    description: "A lively scene depicting a traditional Georgian village celebration with multiple figures in traditional dress, capturing the communal spirit of Georgian culture.",
+    category: "Cultural Heritage"
+  },
+  {
+    id: 10,
+    title: "Golden Cathedral",
+    image: "/lovable-uploads/51c2463f-fa2d-4990-adea-80a35a205610.png",
+    dimensions: "90 x 75 cm",
+    medium: "Oil on Canvas",
+    year: 2024,
+    description: "A magnificent architectural composition featuring Georgian church towers and traditional buildings bathed in golden light.",
+    category: "Landscape"
+  },
+  {
+    id: 11,
+    title: "Traditional Dancers",
+    image: "/lovable-uploads/4fc542f8-6819-4ab6-ab09-b2181006812c.png",
+    dimensions: "85 x 70 cm",
+    medium: "Acrylic on Canvas",
+    year: 2024,
+    description: "Dynamic figures in traditional Georgian dance costumes, capturing the energy and grace of folk dance traditions.",
+    category: "Cultural Heritage"
+  },
+  {
+    id: 12,
+    title: "Woman in Red Veil",
+    image: "/lovable-uploads/c27bb1d3-7414-4be5-971f-9bc2a1dbd3b6.png",
+    dimensions: "70 x 55 cm",
+    medium: "Mixed Media",
+    year: 2024,
+    description: "An intimate portrait of a woman in traditional red veil, painted with warm earth tones that convey deep emotion and cultural identity.",
+    category: "Portrait"
   }
 ];
 
 export const GallerySection = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+  const totalPages = Math.ceil(artworks.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentArtworks = artworks.slice(startIndex, startIndex + itemsPerPage);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -163,8 +229,9 @@ export const GallerySection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
+          key={currentPage}
         >
-          {artworks.map((artwork, index) => (
+          {currentArtworks.map((artwork, index) => (
             <motion.div
               key={artwork.id}
               variants={itemVariants}
@@ -289,6 +356,60 @@ export const GallerySection = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <motion.div 
+            className="mt-16 flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Pagination>
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(currentPage - 1);
+                      }}
+                    />
+                  </PaginationItem>
+                )}
+                
+                {[...Array(totalPages)].map((_, i) => (
+                  <PaginationItem key={i + 1}>
+                    <PaginationLink
+                      href="#"
+                      isActive={currentPage === i + 1}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(i + 1);
+                      }}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setCurrentPage(currentPage + 1);
+                      }}
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          </motion.div>
+        )}
 
         {selectedArtwork && (
           <ArtworkModal
