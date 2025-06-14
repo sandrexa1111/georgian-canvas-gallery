@@ -85,35 +85,37 @@ export const GallerySection = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.15
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0 }
   };
 
   return (
-    <section id="gallery" className="py-20 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="gallery" className="section-spacing min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <motion.div 
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center mb-24 space-y-8"
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
         >
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4">Art Gallery</h2>
-          <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+          <h2 className="font-playfair text-5xl md:text-7xl font-semibold">
+            Art <span className="text-primary">Gallery</span>
+          </h2>
+          <p className="text-muted-foreground text-xl md:text-2xl max-w-4xl mx-auto font-inter leading-relaxed">
             Explore a collection of paintings that capture the essence of Georgian culture, 
             from traditional landscapes to contemporary abstract expressions.
           </p>
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gallery-spacing"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -125,36 +127,38 @@ export const GallerySection = () => {
               variants={itemVariants}
               className="art-card cursor-pointer group"
               onClick={() => setSelectedArtwork(artwork)}
-              whileHover={{ y: -10 }}
-              transition={{ duration: 0.3 }}
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <div className="relative overflow-hidden">
                 <motion.img
                   src={artwork.image}
                   alt={artwork.title}
-                  className="w-full h-80 object-cover transition-transform duration-500"
-                  whileHover={{ scale: 1.1 }}
+                  className="w-full h-96 object-cover transition-transform duration-700"
+                  whileHover={{ scale: 1.08 }}
                 />
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                 >
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <p className="text-sm text-gray-300">{artwork.category}</p>
-                    <h3 className="font-playfair text-xl font-semibold">{artwork.title}</h3>
-                    <p className="text-sm text-gray-400">{artwork.year}</p>
+                  <div className="absolute bottom-6 left-6 text-white space-y-2">
+                    <div className="inline-block px-3 py-1 bg-primary/20 border border-primary/30 rounded-full text-xs text-primary font-dm-sans font-medium">
+                      {artwork.category}
+                    </div>
+                    <h3 className="font-playfair text-2xl font-semibold">{artwork.title}</h3>
+                    <p className="text-sm text-gray-300 font-inter">{artwork.year}</p>
                   </div>
                 </motion.div>
               </div>
               
-              <div className="p-6">
-                <h3 className="font-playfair text-xl font-semibold mb-2">{artwork.title}</h3>
-                <div className="space-y-1 text-sm text-muted-foreground">
-                  <p>{artwork.dimensions} • {artwork.medium}</p>
-                  <p>{artwork.year}</p>
+              <div className="p-8 space-y-4">
+                <h3 className="font-playfair text-2xl font-semibold">{artwork.title}</h3>
+                <div className="space-y-1 text-muted-foreground font-inter">
+                  <p className="text-sm">{artwork.dimensions} • {artwork.medium}</p>
+                  <p className="text-sm">{artwork.year}</p>
                 </div>
-                <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
+                <p className="text-muted-foreground leading-relaxed font-inter line-clamp-3">
                   {artwork.description}
                 </p>
               </div>

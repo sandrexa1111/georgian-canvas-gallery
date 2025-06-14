@@ -1,52 +1,56 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 25 25% 8%;
-    --foreground: 40 15% 92%;
-    --card: 25 20% 12%;
-    --card-foreground: 40 15% 92%;
-    --popover: 25 20% 12%;
-    --popover-foreground: 40 15% 92%;
-    --primary: 43 74% 66%;
-    --primary-foreground: 25 25% 8%;
-    --secondary: 25 15% 18%;
-    --secondary-foreground: 40 15% 92%;
-    --muted: 25 15% 18%;
-    --muted-foreground: 35 10% 65%;
-    --accent: 15 65% 45%;
-    --accent-foreground: 40 15% 92%;
+    /* Dark theme (default) - Pure black with artistic accents */
+    --background: 0 0% 3%;
+    --foreground: 45 10% 92%;
+    --card: 0 0% 6%;
+    --card-foreground: 45 10% 92%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 45 10% 92%;
+    --primary: 43 84% 55%; /* Dark gold accent */
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 45 10% 92%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 45 5% 65%;
+    --accent: 15 85% 45%; /* Rust/deep red accent */
+    --accent-foreground: 45 10% 92%;
     --destructive: 0 65% 58%;
-    --destructive-foreground: 40 15% 92%;
-    --border: 25 15% 22%;
-    --input: 25 15% 22%;
-    --ring: 43 74% 66%;
-    --radius: 0.5rem;
+    --destructive-foreground: 45 10% 92%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 43 84% 55%;
+    --radius: 0.75rem;
   }
 
   .light {
-    --background: 39 100% 97%;
-    --foreground: 25 25% 8%;
-    --card: 39 50% 95%;
-    --card-foreground: 25 25% 8%;
-    --popover: 39 50% 95%;
-    --popover-foreground: 25 25% 8%;
-    --primary: 43 74% 66%;
-    --primary-foreground: 25 25% 8%;
-    --secondary: 39 20% 88%;
-    --secondary-foreground: 25 25% 8%;
-    --muted: 39 20% 88%;
-    --muted-foreground: 35 10% 35%;
-    --accent: 15 65% 45%;
-    --accent-foreground: 39 100% 97%;
-    --destructive: 0 65% 58%;
-    --destructive-foreground: 39 100% 97%;
-    --border: 39 20% 85%;
-    --input: 39 20% 85%;
-    --ring: 43 74% 66%;
+    /* Light theme - Off-white/muted beige, never pure white */
+    --background: 45 25% 96%;
+    --foreground: 0 0% 8%;
+    --card: 45 30% 94%;
+    --card-foreground: 0 0% 8%;
+    --popover: 45 30% 94%;
+    --popover-foreground: 0 0% 8%;
+    --primary: 43 74% 45%; /* Darker gold for contrast */
+    --primary-foreground: 45 25% 96%;
+    --secondary: 45 20% 88%;
+    --secondary-foreground: 0 0% 8%;
+    --muted: 45 20% 88%;
+    --muted-foreground: 0 0% 35%;
+    --accent: 15 75% 35%; /* Darker rust for contrast */
+    --accent-foreground: 45 25% 96%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 45 25% 96%;
+    --border: 45 20% 82%;
+    --input: 45 20% 82%;
+    --ring: 43 74% 45%;
   }
 }
 
@@ -60,28 +64,74 @@
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-inter antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-playfair;
+    @apply font-playfair font-medium;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer components {
+  /* Modern art card with enhanced spacing */
   .art-card {
-    @apply bg-card border border-border rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-accent/20;
+    @apply bg-card border border-border/50 rounded-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30;
   }
   
+  /* Black hero background */
   .hero-bg {
-    background: linear-gradient(135deg, #1a1611 0%, #2d2416 50%, #1f1b14 100%);
+    background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
   }
   
+  /* Modern glowing button */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30;
+    @apply bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/50 hover:scale-105;
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.3);
+    border: 1px solid rgba(218, 165, 32, 0.4);
   }
   
-  .text-glow {
-    text-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+  /* Neon glow effect */
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(218, 165, 32, 0.6), 0 0 60px rgba(218, 165, 32, 0.4);
   }
+  
+  /* Text glow for headings */
+  .text-glow {
+    text-shadow: 0 0 30px rgba(218, 165, 32, 0.8), 0 0 60px rgba(218, 165, 32, 0.4);
+  }
+
+  /* Black section backgrounds */
+  .section-black {
+    @apply bg-black;
+  }
+
+  /* Enhanced spacing utility */
+  .section-spacing {
+    @apply py-32 md:py-40;
+  }
+
+  /* Gallery spacing */
+  .gallery-spacing {
+    @apply gap-12 md:gap-16 lg:gap-20;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
 }

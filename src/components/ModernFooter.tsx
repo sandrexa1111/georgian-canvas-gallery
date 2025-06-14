@@ -4,31 +4,31 @@ import { Facebook, Instagram, Mail, Heart } from 'lucide-react';
 
 export const ModernFooter = () => {
   return (
-    <footer className="bg-card/50 border-t border-border py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="section-black border-t border-border/30 py-20">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <motion.div 
-          className="text-center"
-          initial={{ opacity: 0, y: 30 }}
+          className="text-center space-y-12"
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
         >
-          <div className="mb-8">
-            <h3 className="font-playfair text-3xl font-bold text-primary mb-2">
-              Levan Mosiashvili
+          <div className="space-y-6">
+            <h3 className="font-playfair text-4xl md:text-5xl font-semibold text-white">
+              Levan <span className="text-primary">Mosiashvili</span>
             </h3>
-            <p className="text-muted-foreground italic">
+            <p className="text-gray-400 italic text-lg font-inter">
               Georgian Artist • Painter • Cultural Ambassador
             </p>
           </div>
 
-          <div className="flex justify-center space-x-6 mb-8">
+          <div className="flex justify-center space-x-8">
             <motion.a
               href="https://www.facebook.com/levanmosiashviliart"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-              whileHover={{ scale: 1.1, y: -2 }}
+              className="p-4 rounded-full bg-secondary/50 border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+              whileHover={{ scale: 1.1, y: -4 }}
               whileTap={{ scale: 0.9 }}
             >
               <Facebook size={24} className="text-primary" />
@@ -37,31 +37,31 @@ export const ModernFooter = () => {
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-              whileHover={{ scale: 1.1, y: -2 }}
+              className="p-4 rounded-full bg-secondary/50 border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+              whileHover={{ scale: 1.1, y: -4 }}
               whileTap={{ scale: 0.9 }}
             >
               <Instagram size={24} className="text-primary" />
             </motion.a>
             <motion.a
               href="mailto:info@levanmosiashvili.com"
-              className="p-3 rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-              whileHover={{ scale: 1.1, y: -2 }}
+              className="p-4 rounded-full bg-secondary/50 border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+              whileHover={{ scale: 1.1, y: -4 }}
               whileTap={{ scale: 0.9 }}
             >
               <Mail size={24} className="text-primary" />
             </motion.a>
           </div>
 
-          <div className="border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-muted-foreground text-sm mb-4 sm:mb-0">
+          <div className="border-t border-border/30 pt-12 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <p className="text-gray-400 text-sm font-inter">
               © 2024 Levan Mosiashvili. All rights reserved.
             </p>
             <motion.p 
-              className="text-muted-foreground text-sm flex items-center gap-1"
+              className="text-gray-400 text-sm flex items-center gap-2 font-inter"
               whileHover={{ scale: 1.02 }}
             >
-              Made with <Heart size={16} className="text-red-500" /> by Sandro
+              Made with <Heart size={16} className="text-accent animate-pulse-glow" /> by Sandro
             </motion.p>
           </div>
         </motion.div>
