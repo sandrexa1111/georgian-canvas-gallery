@@ -94,9 +94,14 @@ export const ScrollNavigation = () => {
                     animate={{
                       boxShadow: [
                         "0 0 5px rgba(255, 255, 255, 0.3)",
-                        "0 0 15px rgba(255, 255, 255, 0.6)",
-                        "0 0 5px rgba(255, 255, 255, 0.3)"
+                        "0 0 15px rgba(255, 255, 255, 0.6)"
                       ]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                      ease: "easeInOut"
                     }}
                   />
                 )}
@@ -118,11 +123,15 @@ export const ScrollNavigation = () => {
               animate={{
                 background: [
                   "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
-                  "radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)",
-                  "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)"
+                  "radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)"
                 ]
               }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
             />
             <motion.div
               animate={{ rotate: theme === 'dark' ? 0 : 180 }}

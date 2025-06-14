@@ -102,7 +102,7 @@ export const GallerySection = () => {
       rotateX: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
   };
@@ -136,11 +136,15 @@ export const GallerySection = () => {
               animate={{ 
                 textShadow: [
                   "0 0 10px rgba(255, 255, 255, 0.3)",
-                  "0 0 20px rgba(255, 255, 255, 0.5)",
-                  "0 0 10px rgba(255, 255, 255, 0.3)"
+                  "0 0 20px rgba(255, 255, 255, 0.5)"
                 ]
               }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                repeatType: "reverse",
+                ease: "easeInOut"
+              }}
             >
               Gallery
             </motion.span>
@@ -179,7 +183,7 @@ export const GallerySection = () => {
               }}
               transition={{ 
                 duration: 0.4, 
-                ease: "easeOut",
+                ease: [0.25, 0.46, 0.45, 0.94],
                 type: "spring",
                 stiffness: 300,
                 damping: 30
@@ -194,7 +198,7 @@ export const GallerySection = () => {
                   alt={artwork.title}
                   className="w-full h-96 object-cover"
                   whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
                 />
                 
                 {/* Dynamic overlay with particles effect */}
@@ -288,7 +292,7 @@ export const GallerySection = () => {
                 >
                   {artwork.description}
                 </motion.p>
-              </motion.div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
