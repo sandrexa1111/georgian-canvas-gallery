@@ -1,19 +1,17 @@
 
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Sun, Moon, Menu, X } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
+import { Menu, X } from 'lucide-react';
 
 export const ScrollNavigation = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
   const { scrollYProgress } = useScroll();
   
   const backgroundColor = useTransform(
     scrollYProgress,
     [0, 0.1],
-    [theme === 'dark' ? "rgba(4, 4, 4, 0.8)" : "rgba(255, 255, 255, 0.8)", theme === 'dark' ? "rgba(4, 4, 4, 0.95)" : "rgba(255, 255, 255, 0.95)"]
+    ["rgba(4, 4, 4, 0.8)", "rgba(4, 4, 4, 0.95)"]
   );
 
   const navItems = [
@@ -95,21 +93,6 @@ export const ScrollNavigation = () => {
           </div>
 
           <div className="flex items-center space-x-6">
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={toggleTheme}
-              className="p-3 rounded-full bg-secondary/60 hover:bg-secondary transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.div
-                animate={{ rotate: theme === 'dark' ? 0 : 180 }}
-                transition={{ duration: 0.3 }}
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </motion.div>
-            </motion.button>
-
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
