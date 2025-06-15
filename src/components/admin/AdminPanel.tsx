@@ -1,27 +1,16 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2 } from 'lucide-react';
 import { ArtworkForm } from './ArtworkForm';
-
-interface Artwork {
-  id: number;
-  title: string;
-  image: string;
-  dimensions: string;
-  medium: string;
-  year: number;
-  description: string;
-  category: string;
-  period: string;
-}
+import { useArtworks, type Artwork } from '@/hooks/useArtworks';
 
 interface AdminPanelProps {
   onLogout: () => void;
 }
 
 export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const { artworks, categories, isLoading, addArtwork, updateArtwork, deleteArtwork } = useArtworks();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
 
@@ -30,28 +19,46 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     onLogout();
   };
 
-  const handleAddArtwork = (artwork: Omit<Artwork, 'id'>) => {
-    const newArtwork = {
-      ...artwork,
-      id: Date.now()
-    };
-    setArtworks(prev => [...prev, newArtwork]);
-    setIsFormOpen(false);
-    console.log('Added artwork:', newArtwork);
-  };
-
-  const handleEditArtwork = (artwork: Artwork) => {
-    setArtworks(prev => prev.map(a => a.id === artwork.id ? artwork : a));
-    setEditingArtwork(null);
-    console.log('Updated artwork:', artwork);
-  };
-
-  const handleDeleteArtwork = (id: number) => {
-    if (confirm('Are you sure you want to delete this artwork?')) {
-      setArtworks(prev => prev.filter(a => a.id !== id));
-      console.log('Deleted artwork with id:', id);
+  const handleAddArtwork = async (artworkData: any) => {
+    try {
+      await addArtwork(artworkData);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error('Failed to add artwork:', error);
     }
   };
+
+  const handleEditArtwork = async (artworkData: any) => {
+    if (!editingArtwork) return;
+    
+    try {
+      await updateArtwork(editingArtwork.id, artworkData);
+      setEditingArtwork(null);
+    } catch (error) {
+      console.error('Failed to update artwork:', error);
+    }
+  };
+
+  const handleDeleteArtwork = async (id: string) => {
+    if (confirm('Are you sure you want to delete this artwork?')) {
+      try {
+        await deleteArtwork(id);
+      } catch (error) {
+        console.error('Failed to delete artwork:', error);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,13 +100,19 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
               className="bg-card rounded-lg shadow-md overflow-hidden"
             >
               <img
-                src={artwork.image}
+                src={artwork.image_url || '/placeholder.svg'}
                 alt={artwork.title}
                 className="w-full h-48 object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/placeholder.svg';
+                }}
               />
               <div className="p-4">
                 <h3 className="font-playfair text-lg font-semibold mb-2">{artwork.title}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{artwork.category} • {artwork.year}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {categories.find(cat => cat.id === artwork.category_id)?.name} • {artwork.year_created}
+                </p>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{artwork.description}</p>
                 
                 <div className="flex gap-2">
@@ -133,6 +146,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
         {(isFormOpen || editingArtwork) && (
           <ArtworkForm
             artwork={editingArtwork}
+            categories={categories}
             onSave={editingArtwork ? handleEditArtwork : handleAddArtwork}
             onCancel={() => {
               setIsFormOpen(false);

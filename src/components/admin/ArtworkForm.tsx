@@ -2,60 +2,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Upload } from 'lucide-react';
-
-interface Artwork {
-  id: number;
-  title: string;
-  image: string;
-  dimensions: string;
-  medium: string;
-  year: number;
-  description: string;
-  category: string;
-  period: string;
-}
+import { type Artwork, type Category } from '@/hooks/useArtworks';
 
 interface ArtworkFormProps {
   artwork?: Artwork | null;
+  categories: Category[];
   onSave: (artwork: any) => void;
   onCancel: () => void;
 }
 
-const categories = [
-  'Landscape',
-  'Portrait', 
-  'Still Life',
-  'Religious',
-  'Abstract',
-  'Cultural Heritage'
-];
-
-const periods = [
-  'Contemporary (2020-2024)',
-  'Modern (2000-2019)',
-  'Classical (1980-1999)'
-];
-
-export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => {
+export const ArtworkForm = ({ artwork, categories, onSave, onCancel }: ArtworkFormProps) => {
   const [formData, setFormData] = useState({
     title: artwork?.title || '',
-    image: artwork?.image || '',
+    image_url: artwork?.image_url || '',
     dimensions: artwork?.dimensions || '',
     medium: artwork?.medium || '',
-    year: artwork?.year || new Date().getFullYear(),
+    year_created: artwork?.year_created || new Date().getFullYear(),
     description: artwork?.description || '',
-    category: artwork?.category || categories[0],
-    period: artwork?.period || periods[0]
+    category_id: artwork?.category_id || (categories[0]?.id || ''),
+    price: artwork?.price || undefined,
+    is_featured: artwork?.is_featured || false,
+    is_published: artwork?.is_published !== false
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (artwork) {
-      onSave({ ...artwork, ...formData });
-    } else {
-      onSave(formData);
-    }
+    onSave(formData);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +37,7 @@ export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => 
       reader.onload = (e) => {
         setFormData(prev => ({
           ...prev,
-          image: e.target?.result as string
+          image_url: e.target?.result as string
         }));
       };
       reader.readAsDataURL(file);
@@ -97,16 +69,20 @@ export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => 
             <div>
               <label className="block text-sm font-medium mb-2">Image</label>
               <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                {formData.image ? (
+                {formData.image_url ? (
                   <div className="space-y-4">
                     <img
-                      src={formData.image}
+                      src={formData.image_url}
                       alt="Preview"
                       className="mx-auto max-h-40 rounded"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                      onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
                       className="text-red-600 hover:text-red-700"
                     >
                       Remove Image
@@ -135,8 +111,8 @@ export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => 
               <input
                 type="url"
                 placeholder="Or enter image URL"
-                value={formData.image}
-                onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                value={formData.image_url}
+                onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
                 className="mt-2 w-full px-3 py-2 border border-border rounded-md bg-background"
               />
             </div>
@@ -180,46 +156,47 @@ export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => 
               </div>
             </div>
 
-            {/* Year */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Year</label>
-              <input
-                type="number"
-                required
-                min="1900"
-                max={new Date().getFullYear()}
-                value={formData.year}
-                onChange={(e) => setFormData(prev => ({ ...prev, year: parseInt(e.target.value) }))}
-                className="w-full px-3 py-2 border border-border rounded-md bg-background"
-              />
-            </div>
-
-            {/* Category & Period */}
+            {/* Year & Price */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Category</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                <label className="block text-sm font-medium mb-2">Year</label>
+                <input
+                  type="number"
+                  required
+                  min="1900"
+                  max={new Date().getFullYear()}
+                  value={formData.year_created}
+                  onChange={(e) => setFormData(prev => ({ ...prev, year_created: parseInt(e.target.value) }))}
                   className="w-full px-3 py-2 border border-border rounded-md bg-background"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Period</label>
-                <select
-                  value={formData.period}
-                  onChange={(e) => setFormData(prev => ({ ...prev, period: e.target.value }))}
+                <label className="block text-sm font-medium mb-2">Price (optional)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value ? parseFloat(e.target.value) : undefined }))}
                   className="w-full px-3 py-2 border border-border rounded-md bg-background"
-                >
-                  {periods.map(period => (
-                    <option key={period} value={period}>{period}</option>
-                  ))}
-                </select>
+                  placeholder="0.00"
+                />
               </div>
+            </div>
+
+            {/* Category */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Category</label>
+              <select
+                value={formData.category_id}
+                onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-md bg-background"
+                required
+              >
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
             </div>
 
             {/* Description */}
@@ -233,6 +210,34 @@ export const ArtworkForm = ({ artwork, onSave, onCancel }: ArtworkFormProps) => 
                 className="w-full px-3 py-2 border border-border rounded-md bg-background"
                 placeholder="Describe the artwork..."
               />
+            </div>
+
+            {/* Checkboxes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
+                  className="rounded"
+                />
+                <label htmlFor="is_featured" className="text-sm font-medium">
+                  Featured artwork
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="is_published"
+                  checked={formData.is_published}
+                  onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.checked }))}
+                  className="rounded"
+                />
+                <label htmlFor="is_published" className="text-sm font-medium">
+                  Published
+                </label>
+              </div>
             </div>
 
             {/* Submit Buttons */}
