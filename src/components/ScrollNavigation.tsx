@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const ScrollNavigation = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -15,21 +16,22 @@ export const ScrollNavigation = () => {
   );
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'gallery', label: 'Gallery' },
-    { id: 'about', label: 'About' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'home', label: 'Home', isScroll: true },
+    { id: 'gallery', label: 'Gallery', isScroll: true },
+    { id: 'blog', label: 'Blog', isScroll: false, path: '/blog' },
+    { id: 'about', label: 'About', isScroll: true },
+    { id: 'contact', label: 'Contact', isScroll: true },
   ];
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map(item => document.getElementById(item.id));
+      const sections = navItems.filter(item => item.isScroll).map(item => document.getElementById(item.id));
       const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
         if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i].id);
+          setActiveSection(navItems.filter(item => item.isScroll)[i].id);
           break;
         }
       }
@@ -45,6 +47,14 @@ export const ScrollNavigation = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleNavClick = (item: any) => {
+    if (item.isScroll) {
+      scrollToSection(item.id);
+    } else {
+      setIsMobileMenuOpen(false);
+    }
   };
 
   return (
@@ -68,28 +78,48 @@ export const ScrollNavigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-12">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`px-4 py-3 text-base font-medium font-inter transition-all duration-300 relative ${
-                  activeSection === item.id
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-primary'
-                }`}
-                whileHover={{ y: -1 }}
-                whileTap={{ y: 0 }}
-              >
-                {item.label}
-                {activeSection === item.id && (
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-                    layoutId="activeTab"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-              </motion.button>
-            ))}
+            {navItems.map((item) => {
+              if (item.isScroll) {
+                return (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => handleNavClick(item)}
+                    className={`px-4 py-3 text-base font-medium font-inter transition-all duration-300 relative ${
+                      activeSection === item.id
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                    whileHover={{ y: -1 }}
+                    whileTap={{ y: 0 }}
+                  >
+                    {item.label}
+                    {activeSection === item.id && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                        layoutId="activeTab"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                  </motion.button>
+                );
+              } else {
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path!}
+                    className="px-4 py-3 text-base font-medium font-inter transition-all duration-300 text-muted-foreground hover:text-primary"
+                  >
+                    <motion.span
+                      whileHover={{ y: -1 }}
+                      whileTap={{ y: 0 }}
+                      className="block"
+                    >
+                      {item.label}
+                    </motion.span>
+                  </Link>
+                );
+              }
+            })}
           </div>
 
           <div className="flex items-center space-x-6">
@@ -125,21 +155,42 @@ export const ScrollNavigation = () => {
           className="md:hidden overflow-hidden border-t border-border/30"
         >
           <div className="py-6 space-y-3">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left px-4 py-3 text-lg font-medium font-inter transition-colors rounded-md ${
-                  activeSection === item.id
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-                }`}
-                whileHover={{ x: 6 }}
-                whileTap={{ x: 0 }}
-              >
-                {item.label}
-              </motion.button>
-            ))}
+            {navItems.map((item) => {
+              if (item.isScroll) {
+                return (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => handleNavClick(item)}
+                    className={`block w-full text-left px-4 py-3 text-lg font-medium font-inter transition-colors rounded-md ${
+                      activeSection === item.id
+                        ? 'text-primary bg-primary/10'
+                        : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+                    }`}
+                    whileHover={{ x: 6 }}
+                    whileTap={{ x: 0 }}
+                  >
+                    {item.label}
+                  </motion.button>
+                );
+              } else {
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path!}
+                    className="block w-full text-left px-4 py-3 text-lg font-medium font-inter transition-colors rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <motion.span
+                      whileHover={{ x: 6 }}
+                      whileTap={{ x: 0 }}
+                      className="block"
+                    >
+                      {item.label}
+                    </motion.span>
+                  </Link>
+                );
+              }
+            })}
             {/* Mobile Admin Link */}
             <motion.a
               href="/admin"
