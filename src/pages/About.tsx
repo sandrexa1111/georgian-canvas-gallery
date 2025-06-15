@@ -1,3 +1,4 @@
+
 import { Calendar, MapPin, Palette, Award } from 'lucide-react';
 import { Navigation } from '@/components/Navigation';
 
@@ -6,7 +7,7 @@ const About = () => {
     <>
       <Navigation />
       <div className="min-h-screen">
-        {/* Header Section - copied from home page with smaller text */}
+        {/* Header Section */}
         <section className="min-h-[60vh] flex items-center justify-center relative overflow-hidden hero-gradient">
           {/* Artistic background elements */}
           <div className="absolute inset-0 opacity-15">
@@ -29,7 +30,7 @@ const About = () => {
             <div className="animate-fade-in">
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-card/90 backdrop-blur-md border border-primary/30 rounded-full text-foreground text-sm font-inter shadow-lg mb-6">
                 <Award size={16} className="text-primary" />
-                Contemporary Georgian Master Artist
+                French Talent Passport Holder & International Master Artist
               </div>
               
               <h1 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-medium text-foreground leading-[0.9] tracking-tight drop-shadow-2xl mb-4">
@@ -38,8 +39,8 @@ const About = () => {
               </h1>
               
               <p className="text-lg md:text-xl text-foreground/90 max-w-2xl mx-auto font-inter font-light leading-relaxed drop-shadow-lg">
-                Discover the artistic journey of a distinguished Georgian painter whose work bridges 
-                traditional heritage with contemporary expression.
+                Discover the remarkable journey of a distinguished Georgian painter whose work spans four distinct 
+                artistic periods and graces collections across five continents.
               </p>
             </div>
           </div>
@@ -53,8 +54,9 @@ const About = () => {
               <div className="animate-fade-in">
                 <h2 className="font-playfair text-3xl font-bold mb-6">The Artist</h2>
                 <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                  Levan Mosiashvili is a distinguished Georgian painter whose work bridges the gap between 
-                  traditional Georgian artistic heritage and contemporary artistic expression.
+                  Levan Mosiashvili is a distinguished Georgian painter who became the first Georgian to receive 
+                  the prestigious French talent passport. His work spans four distinct artistic periods and 
+                  is preserved in collections across five continents.
                 </p>
                 
                 <div className="grid grid-cols-2 gap-6">
@@ -62,23 +64,23 @@ const About = () => {
                     <MapPin className="text-primary" size={20} />
                     <div>
                       <p className="font-semibold">Based in</p>
-                      <p className="text-muted-foreground">Georgia</p>
+                      <p className="text-muted-foreground">Tbilisi & Southern France</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <Calendar className="text-primary" size={20} />
                     <div>
-                      <p className="font-semibold">Active Since</p>
-                      <p className="text-muted-foreground">2015</p>
+                      <p className="font-semibold">Born</p>
+                      <p className="text-muted-foreground">1971, Tbilisi</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <Palette className="text-primary" size={20} />
                     <div>
-                      <p className="font-semibold">Specializes In</p>
-                      <p className="text-muted-foreground">Landscapes & Portraits</p>
+                      <p className="font-semibold">Art Periods</p>
+                      <p className="text-muted-foreground">Georgian, French, Modern, Abstract</p>
                     </div>
                   </div>
                   
@@ -86,7 +88,7 @@ const About = () => {
                     <Award className="text-primary" size={20} />
                     <div>
                       <p className="font-semibold">Recognition</p>
-                      <p className="text-muted-foreground">Local Exhibitions</p>
+                      <p className="text-muted-foreground">French Talent Passport 2008</p>
                     </div>
                   </div>
                 </div>
@@ -95,7 +97,7 @@ const About = () => {
               <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
                 <img
                   src="/lovable-uploads/b4055fae-25ae-46fb-9e55-0892fc0b76dc.png"
-                  alt="Levan Mosiashvili in his studio"
+                  alt="Levan Mosiashvili artwork"
                   className="w-full h-96 object-cover rounded-lg shadow-xl"
                 />
               </div>
@@ -108,44 +110,44 @@ const About = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-6">
                   <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                    <h3 className="font-playfair text-xl font-semibold mb-3">Early Inspiration</h3>
+                    <h3 className="font-playfair text-xl font-semibold mb-3">Early Life & Education</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      Born and raised in Georgia, Levan's artistic journey began with childhood fascination 
-                      for the dramatic landscapes of the Caucasus Mountains and the rich cultural tapestry 
-                      of Georgian heritage. The interplay of light and shadow across ancient monasteries 
-                      and rolling vineyards became the foundation of his artistic vision.
+                      Born in 1971 in Tbilisi, Levan's artistic calling emerged during childhood, even during 
+                      the communist period when he received honorary awards and diplomas. Despite graduating 
+                      from the Forestry Faculty of Georgian Agrarian University in 1993 and earning a Candidate 
+                      of Biological Sciences degree in 1996, his passion for art remained unwavering.
                     </p>
                   </div>
                   
                   <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-                    <h3 className="font-playfair text-xl font-semibold mb-3">Artistic Philosophy</h3>
+                    <h3 className="font-playfair text-xl font-semibold mb-3">Self-Taught Mastery</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      "Art should speak to the soul before it speaks to the mind," Levan often says. 
-                      His work explores the emotional landscape of Georgian identity, capturing not just 
-                      the physical beauty of the land, but the spiritual connection between people and place 
-                      that defines Georgian culture.
+                      As a completely self-taught artist, Levan developed his unique style working with 
+                      different techniques on canvas. His artistic evolution spans four distinct periods: 
+                      Georgian, French, Modern, and Abstract, each reflecting different phases of his 
+                      creative and geographical journey.
                     </p>
                   </div>
                 </div>
                 
                 <div className="space-y-6">
                   <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
-                    <h3 className="font-playfair text-xl font-semibold mb-3">Technical Mastery</h3>
+                    <h3 className="font-playfair text-xl font-semibold mb-3">International Recognition</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      Working primarily in oils and acrylics, Levan has developed a distinctive style that 
-                      combines realistic detail with impressionistic atmosphere. His landscapes capture 
-                      the changing moods of Georgian seasons, while his portraits reveal the depth and 
-                      complexity of human emotion through abstract elements.
+                      After winning numerous international art competitions, Levan received an unprecedented 
+                      honor in 2008 when the French government granted him a talent passport, making him the 
+                      first Georgian to receive this prestigious status. This recognition opened doors to 
+                      exhibitions and collections worldwide.
                     </p>
                   </div>
                   
                   <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                    <h3 className="font-playfair text-xl font-semibold mb-3">Contemporary Vision</h3>
+                    <h3 className="font-playfair text-xl font-semibold mb-3">Global Presence</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      In his recent work, Levan explores modern surrealism, creating pieces that challenge 
-                      conventional perspectives while remaining deeply rooted in Georgian artistic traditions. 
-                      This fusion of classical technique with contemporary vision creates artwork that resonates 
-                      with both local and international audiences.
+                      His works are now preserved in private collections and galleries across multiple 
+                      continents, including Georgia, France, Russia, USA, Germany, Switzerland, Italy, 
+                      Uruguay, Venezuela, Japan, Canada, New Zealand, Australia, Turkey, Belgium, England, 
+                      Brazil, Chile, Sweden, Norway, and China.
                     </p>
                   </div>
                 </div>
@@ -162,29 +164,29 @@ const About = () => {
                 <div className="space-y-12">
                   {[
                     {
+                      year: "1971",
+                      title: "Born in Tbilisi",
+                      description: "Born in Tbilisi, Georgia. Art became his calling from childhood, receiving awards even during the communist period."
+                    },
+                    {
+                      year: "1993-1996",
+                      title: "Academic Foundation",
+                      description: "Graduated from Georgian Agrarian University's Forestry Faculty while studying theater direction, later earning Candidate of Biological Sciences degree."
+                    },
+                    {
+                      year: "2008",
+                      title: "French Talent Passport",
+                      description: "Became the first Georgian to receive the prestigious French talent passport after winning international competitions."
+                    },
+                    {
                       year: "2015",
-                      title: "Artistic Journey Begins",
-                      description: "Started painting professionally, focusing on Georgian landscapes and traditional themes."
+                      title: "Cultural Leadership",
+                      description: "Became head of the International Club of Friends of the National Library of the Parliament of Georgia and co-founded Georgia Center."
                     },
                     {
-                      year: "2018",
-                      title: "First Solo Exhibition",
-                      description: "Showcased 'Echoes of Kakheti' series at a local gallery, receiving critical acclaim."
-                    },
-                    {
-                      year: "2020",
-                      title: "Digital Presence",
-                      description: "Launched social media presence, connecting with art lovers worldwide during the pandemic."
-                    },
-                    {
-                      year: "2022",
-                      title: "Abstract Evolution",
-                      description: "Began incorporating abstract elements and surrealistic themes into traditional Georgian subjects."
-                    },
-                    {
-                      year: "2024",
-                      title: "Online Gallery Launch",
-                      description: "Established comprehensive online presence to share artwork with global audience."
+                      year: "2022-2023",
+                      title: "Recent Acclaim",
+                      description: "Participated in Art Dubai 2022 and Art New York 2023, where his painting was awarded as one of the most successful of the year."
                     }
                   ].map((event, index) => (
                     <div
@@ -216,7 +218,7 @@ const About = () => {
               <h2 className="font-playfair text-3xl font-bold mb-4">Connect with the Artist</h2>
               <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Follow Levan's artistic journey on social media or get in touch to discuss 
-                commissions and available artwork.
+                commissions and available artwork from his international collection.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

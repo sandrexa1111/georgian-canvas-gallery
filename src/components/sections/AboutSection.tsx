@@ -56,17 +56,17 @@ export const AboutSection = () => {
           >
             <div className="space-y-8">
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                Born in 1971 in Tbilisi, Levan Mosiashvili is a distinguished Georgian artist whose journey spans 
-                from biological sciences to becoming an internationally recognized painter. A self-taught artist 
-                with four distinct art periods - Georgian, French, Modern, and Abstract - his work has captured 
-                the hearts of collectors across the globe.
+                Born in 1971 in Tbilisi, Levan Mosiashvili is a self-taught Georgian artist whose journey 
+                spans from biological sciences to becoming an internationally recognized painter. With four 
+                distinct art periods - Georgian, French, Modern, and Abstract - his work has captured the 
+                hearts of collectors across the globe.
               </p>
               
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
-                Granted the prestigious talent passport by the French government in 2008, Levan became the first 
-                Georgian to receive this honor. His paintings now grace private collections and galleries across 
-                multiple continents, and his recent work was recognized as one of the most successful paintings 
-                of the year at Art New York 2023.
+                In 2008, after winning numerous international art competitions, Levan became the first 
+                Georgian to receive the prestigious French talent passport. His paintings now grace private 
+                collections and galleries across five continents, and his recent work was recognized as one 
+                of the most successful paintings of the year at Art New York 2023.
               </p>
             </div>
 
