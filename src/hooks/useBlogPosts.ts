@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -26,7 +26,7 @@ export const useBlogPosts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchBlogPosts = async () => {
+  const fetchBlogPosts = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -46,32 +46,35 @@ export const useBlogPosts = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
-  const addBlogPost = async (postData: Partial<BlogPost>) => {
+  const addBlogPost = useCallback(async (postData: Partial<BlogPost>) => {
     try {
-      // Ensure required fields are present
-      if (!postData.title || !postData.content) {
+      // Validate required fields
+      if (!postData.title?.trim() || !postData.content?.trim()) {
         throw new Error('Title and content are required');
       }
 
-      const slug = await generateSlug(postData.title);
-      const readingTime = calculateReadingTime(postData.content);
+      // Generate slug and calculate reading time efficiently
+      const [slug, readingTime] = await Promise.all([
+        generateSlug(postData.title),
+        Promise.resolve(calculateReadingTime(postData.content))
+      ]);
       
       const { data, error } = await supabase
         .from('blog_posts')
         .insert({
-          title: postData.title,
-          content: postData.content,
-          excerpt: postData.excerpt || null,
+          title: postData.title.trim(),
+          content: postData.content.trim(),
+          excerpt: postData.excerpt?.trim() || null,
           slug,
           author_id: postData.author_id || null,
-          featured_image_url: postData.featured_image_url || null,
+          featured_image_url: postData.featured_image_url?.trim() || null,
           is_published: postData.is_published || false,
           is_featured: postData.is_featured || false,
           reading_time: readingTime,
           tags: postData.tags || null,
-          meta_description: postData.meta_description || null,
+          meta_description: postData.meta_description?.trim() || null,
           published_at: postData.is_published ? new Date().toISOString() : null
         })
         .select()
@@ -79,6 +82,7 @@ export const useBlogPosts = () => {
 
       if (error) throw error;
       
+      // Only update local state if published
       if (data.is_published) {
         setBlogPosts(prev => [data, ...prev]);
       }
@@ -93,30 +97,37 @@ export const useBlogPosts = () => {
       console.error('Error adding blog post:', error);
       toast({
         title: "Error",
-        description: "Failed to create blog post",
+        description: error instanceof Error ? error.message : "Failed to create blog post",
         variant: "destructive",
       });
       throw error;
     }
-  };
+  }, [toast]);
 
-  const updateBlogPost = async (id: string, postData: Partial<BlogPost>) => {
+  const updateBlogPost = useCallback(async (id: string, postData: Partial<BlogPost>) => {
     try {
-      const readingTime = postData.content ? calculateReadingTime(postData.content) : undefined;
+      const updateData: any = { ...postData };
+      
+      // Calculate reading time if content changed
+      if (postData.content) {
+        updateData.reading_time = calculateReadingTime(postData.content);
+      }
+      
+      // Set published_at based on is_published status
+      if (postData.hasOwnProperty('is_published')) {
+        updateData.published_at = postData.is_published ? new Date().toISOString() : null;
+      }
       
       const { data, error } = await supabase
         .from('blog_posts')
-        .update({
-          ...postData,
-          reading_time: readingTime,
-          published_at: postData.is_published ? new Date().toISOString() : null
-        })
+        .update(updateData)
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
       
+      // Update local state efficiently
       setBlogPosts(prev => prev.map(post => post.id === id ? data : post));
       
       toast({
@@ -134,9 +145,9 @@ export const useBlogPosts = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
-  const deleteBlogPost = async (id: string) => {
+  const deleteBlogPost = useCallback(async (id: string) => {
     try {
       const { error } = await supabase
         .from('blog_posts')
@@ -145,6 +156,7 @@ export const useBlogPosts = () => {
 
       if (error) throw error;
       
+      // Update local state immediately
       setBlogPosts(prev => prev.filter(post => post.id !== id));
       
       toast({
@@ -160,29 +172,42 @@ export const useBlogPosts = () => {
       });
       throw error;
     }
-  };
+  }, [toast]);
 
   const generateSlug = async (title: string): Promise<string> => {
-    const { data, error } = await supabase
-      .rpc('generate_blog_slug', { title });
-    
-    if (error) {
+    try {
+      const { data, error } = await supabase
+        .rpc('generate_blog_slug', { title });
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
       console.error('Error generating slug:', error);
-      return title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      // Fallback to client-side slug generation
+      return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
     }
-    
-    return data;
   };
 
   const calculateReadingTime = (content: string): number => {
     const wordsPerMinute = 200;
-    const wordCount = content.trim().split(/\s+/).length;
-    return Math.ceil(wordCount / wordsPerMinute);
+    const wordCount = content
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0)
+      .length;
+    return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
   };
 
   useEffect(() => {
     fetchBlogPosts();
-  }, []);
+  }, [fetchBlogPosts]);
 
   return {
     blogPosts,
