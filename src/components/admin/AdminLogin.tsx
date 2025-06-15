@@ -1,99 +1,133 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock } from 'lucide-react';
+import { Lock, User } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface AdminLoginProps {
   onLogin: () => void;
 }
 
 export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // You can change this secret password to whatever you want
-  const ADMIN_PASSWORD = 'admin2024gallery';
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
-    // Simulate a small delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      // Sign in with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (password === ADMIN_PASSWORD) {
-      localStorage.setItem('gallery_admin_auth', 'authenticated');
-      onLogin();
-    } else {
-      setError('Invalid password');
+      if (error) throw error;
+
+      if (data.user) {
+        // Check if user has admin role
+        const { data: roleData, error: roleError } = await supabase
+          .rpc('has_role', {
+            _user_id: data.user.id,
+            _role: 'admin'
+          });
+
+        if (roleError) {
+          console.error('Error checking role:', roleError);
+          throw new Error('Failed to verify admin access');
+        }
+
+        if (!roleData) {
+          await supabase.auth.signOut();
+          throw new Error('Access denied. Admin privileges required.');
+        }
+
+        // Store authentication state
+        localStorage.setItem('gallery_admin_auth', 'authenticated');
+        toast({
+          title: "Login successful",
+          description: "Welcome to the admin panel",
+        });
+        onLogin();
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login failed",
+        description: error.message || "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card p-8 rounded-lg shadow-lg max-w-md w-full mx-4"
+        className="bg-card rounded-lg shadow-xl p-8 w-full max-w-md border border-border"
       >
         <div className="text-center mb-8">
-          <Lock className="mx-auto mb-4 text-primary" size={48} />
-          <h1 className="font-playfair text-2xl font-bold">Admin Access</h1>
-          <p className="text-muted-foreground mt-2">Enter your password to access the admin panel</p>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <Lock className="w-8 h-8 text-primary" />
+          </motion.div>
+          <h1 className="font-playfair text-2xl font-bold mb-2">Admin Panel</h1>
+          <p className="text-muted-foreground">Sign in to manage the gallery</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2">
-              Password
-            </label>
+            <label className="block text-sm font-medium mb-2">Email</label>
             <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter admin password"
+                type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-md bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="admin@example.com"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
             </div>
           </div>
 
-          {error && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-500 text-sm text-center"
-            >
-              {error}
-            </motion.div>
-          )}
+          <div>
+            <label className="block text-sm font-medium mb-2">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-md bg-background focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Enter password"
+              />
+            </div>
+          </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="w-full bg-primary text-primary-foreground py-3 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Authenticating...' : 'Access Admin Panel'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="mt-6 text-xs text-center text-muted-foreground">
-          <p>Admin password: <code className="bg-secondary px-1 rounded">admin2024gallery</code></p>
-          <p className="mt-1">You can change this in AdminLogin.tsx</p>
+        <div className="mt-6 text-center text-sm text-muted-foreground">
+          <p>Access restricted to administrators only</p>
         </div>
       </motion.div>
     </div>
