@@ -50,17 +50,30 @@ export const useBlogPosts = () => {
 
   const addBlogPost = async (postData: Partial<BlogPost>) => {
     try {
-      const slug = postData.title ? await generateSlug(postData.title) : '';
-      const readingTime = postData.content ? calculateReadingTime(postData.content) : 0;
+      // Ensure required fields are present
+      if (!postData.title || !postData.content) {
+        throw new Error('Title and content are required');
+      }
+
+      const slug = await generateSlug(postData.title);
+      const readingTime = calculateReadingTime(postData.content);
       
       const { data, error } = await supabase
         .from('blog_posts')
-        .insert([{
-          ...postData,
+        .insert({
+          title: postData.title,
+          content: postData.content,
+          excerpt: postData.excerpt || null,
           slug,
+          author_id: postData.author_id || null,
+          featured_image_url: postData.featured_image_url || null,
+          is_published: postData.is_published || false,
+          is_featured: postData.is_featured || false,
           reading_time: readingTime,
+          tags: postData.tags || null,
+          meta_description: postData.meta_description || null,
           published_at: postData.is_published ? new Date().toISOString() : null
-        }])
+        })
         .select()
         .single();
 
