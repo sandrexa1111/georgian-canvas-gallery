@@ -93,6 +93,15 @@ export const ScrollNavigation = () => {
           </div>
 
           <div className="flex items-center space-x-6">
+            {/* Subtle Admin Link - only visible on hover */}
+            <motion.a
+              href="/admin"
+              className="hidden md:block opacity-0 hover:opacity-100 transition-opacity duration-300 text-xs text-muted-foreground hover:text-foreground"
+              whileHover={{ scale: 1.05 }}
+            >
+              •
+            </motion.a>
+
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -131,6 +140,14 @@ export const ScrollNavigation = () => {
                 {item.label}
               </motion.button>
             ))}
+            {/* Mobile Admin Link */}
+            <motion.a
+              href="/admin"
+              className="block w-full text-left px-4 py-3 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-md transition-colors"
+              whileHover={{ x: 6 }}
+            >
+              Admin
+            </motion.a>
           </div>
         </motion.div>
       </div>
