@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -24,11 +23,13 @@ export interface BlogPost {
 export const useBlogPosts = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const fetchBlogPosts = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(null);
       console.log('Fetching blog posts...');
       
       const { data, error } = await supabase
@@ -39,23 +40,22 @@ export const useBlogPosts = () => {
 
       if (error) {
         console.error('Error fetching blog posts:', error);
-        throw error;
+        setError(error.message);
+        setBlogPosts([]);
+        return;
       }
 
-      console.log('Blog posts fetched:', data?.length || 0);
+      console.log('Blog posts fetched successfully:', data?.length || 0);
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error in fetchBlogPosts:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load blog posts",
-        variant: "destructive",
-      });
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load blog posts';
+      setError(errorMessage);
       setBlogPosts([]);
     } finally {
       setIsLoading(false);
     }
-  }, [toast]);
+  }, []);
 
   const generateSlug = async (title: string): Promise<string> => {
     try {
@@ -250,6 +250,7 @@ export const useBlogPosts = () => {
   return {
     blogPosts,
     isLoading,
+    error,
     addBlogPost,
     updateBlogPost,
     deleteBlogPost,
