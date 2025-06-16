@@ -12,6 +12,8 @@ const Admin = () => {
   useEffect(() => {
     console.log('Admin component mounting, checking authentication...');
     
+    let isMounted = true;
+
     // Check authentication state
     const checkAuth = async () => {
       try {
@@ -19,6 +21,8 @@ const Admin = () => {
         console.log('Getting current session...');
         
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
         
         if (sessionError) {
           console.error('Session error:', sessionError);
@@ -52,6 +56,8 @@ const Admin = () => {
           timeoutPromise
         ]) as any;
 
+        if (!isMounted) return;
+
         if (roleError) {
           console.error('Role check error:', roleError);
           setAuthError('Failed to verify admin privileges');
@@ -68,12 +74,15 @@ const Admin = () => {
           await supabase.auth.signOut();
         }
       } catch (error) {
+        if (!isMounted) return;
         console.error('Authentication check failed:', error);
         setAuthError('Authentication check failed');
         setIsAuthenticated(false);
         await supabase.auth.signOut();
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -81,6 +90,8 @@ const Admin = () => {
 
     // Listen for auth changes with simplified logic
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!isMounted) return;
+      
       console.log('Auth state changed:', event);
       
       if (event === 'SIGNED_OUT' || !session) {
@@ -95,26 +106,31 @@ const Admin = () => {
             _role: 'admin'
           });
 
-          if (!roleError && roleData) {
-            setIsAuthenticated(true);
-            setAuthError(null);
-            localStorage.setItem('gallery_admin_auth', 'authenticated');
-          } else {
-            setIsAuthenticated(false);
-            setAuthError('Access denied: Admin privileges required');
-            await supabase.auth.signOut();
+          if (isMounted) {
+            if (!roleError && roleData) {
+              setIsAuthenticated(true);
+              setAuthError(null);
+              localStorage.setItem('gallery_admin_auth', 'authenticated');
+            } else {
+              setIsAuthenticated(false);
+              setAuthError('Access denied: Admin privileges required');
+              await supabase.auth.signOut();
+            }
           }
         } catch (error) {
-          console.error('Role check failed during sign in:', error);
-          setIsAuthenticated(false);
-          setAuthError('Failed to verify admin privileges');
-          await supabase.auth.signOut();
+          if (isMounted) {
+            console.error('Role check failed during sign in:', error);
+            setIsAuthenticated(false);
+            setAuthError('Failed to verify admin privileges');
+            await supabase.auth.signOut();
+          }
         }
       }
     });
 
     return () => {
       console.log('Admin component unmounting');
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);

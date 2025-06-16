@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ArtworkModal } from '@/components/ArtworkModal';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Navigation } from '@/components/Navigation';
+import { useArtworks, getPeriodFromYear, type Artwork as SupabaseArtwork, type Category } from '@/hooks/useArtworks';
 
 interface Artwork {
   id: number;
@@ -17,164 +18,47 @@ interface Artwork {
   price?: string;
 }
 
-const artworks: Artwork[] = [
-  {
-    id: 1,
-    title: "Golden Village",
-    image: "/lovable-uploads/92b785c0-0831-46a3-ad0f-5c6a095c8d19.png",
-    dimensions: "80 x 60 cm",
-    medium: "Oil on Canvas",
-    year: 2023,
-    description: "A vibrant depiction of traditional Georgian architecture with warm golden tones, showcasing the harmony between rural life and natural beauty.",
-    category: "Landscape",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 2,
-    title: "Woman in Red Headscarf",
-    image: "/lovable-uploads/c8a6f9c1-2bf7-4772-8861-49272f578733.png",
-    dimensions: "70 x 50 cm",
-    medium: "Mixed Media",
-    year: 2023,
-    description: "A powerful portrait featuring traditional Georgian motifs and patterns, celebrating the strength and beauty of Georgian women.",
-    category: "Portrait",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 3,
-    title: "Garden of Joy",
-    image: "/lovable-uploads/f4bf28cf-5a78-4850-ac2f-0da3ac18d60e.png",
-    dimensions: "90 x 70 cm",
-    medium: "Acrylic on Canvas",
-    year: 2022,
-    description: "An explosion of colorful flowers and patterns creating a joyful celebration of nature's abundance and the beauty of Georgian gardens.",
-    category: "Still Life",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 4,
-    title: "Midnight Village",
-    image: "/lovable-uploads/6f1afc91-f743-481a-8885-e127cc111d5f.png",
-    dimensions: "100 x 80 cm",
-    medium: "Oil on Canvas",
-    year: 2023,
-    description: "A mystical nighttime scene of a Georgian village under the moonlight, painted in deep blues that evoke tranquility and contemplation.",
-    category: "Landscape",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 5,
-    title: "Saint George and the Dragon",
-    image: "/lovable-uploads/74d1fbce-2058-422e-82d9-3daf3dd000e6.png",
-    dimensions: "85 x 65 cm",
-    medium: "Mixed Media",
-    year: 2022,
-    description: "A modern interpretation of Georgia's patron saint, blending traditional iconography with contemporary artistic expression.",
-    category: "Religious",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 6,
-    title: "Red Lady",
-    image: "/lovable-uploads/8f081d62-6772-48f8-aba5-e3f813da7c06.png",
-    dimensions: "75 x 60 cm",
-    medium: "Acrylic on Canvas",
-    year: 2023,
-    description: "A contemplative figure in vibrant reds and oranges, representing the warmth and passion of Georgian culture through abstract form.",
-    category: "Abstract",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 7,
-    title: "Mother and Child with Bird",
-    image: "/lovable-uploads/bd676107-6b4f-4066-8a4d-e617fc85ae1e.png",
-    dimensions: "85 x 70 cm",
-    medium: "Acrylic on Canvas",
-    year: 2024,
-    description: "A tender portrayal of motherhood featuring vibrant colors and symbolic elements, representing the bond between mother and child in Georgian culture.",
-    category: "Portrait",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 8,
-    title: "Georgian Couple",
-    image: "/lovable-uploads/50ae435f-dccd-44a0-ba4e-864c46d0405e.png",
-    dimensions: "80 x 65 cm",
-    medium: "Mixed Media",
-    year: 2024,
-    description: "A colorful representation of a traditional Georgian couple, showcasing the rich cultural heritage through folk art styling and vibrant patterns.",
-    category: "Portrait",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 9,
-    title: "Village Celebration",
-    image: "/lovable-uploads/5030fc45-5a3e-48ce-b2d1-45ac8e719910.png",
-    dimensions: "100 x 80 cm",
-    medium: "Oil on Canvas",
-    year: 2024,
-    description: "A lively scene depicting a traditional Georgian village celebration with multiple figures in traditional dress, capturing the communal spirit of Georgian culture.",
-    category: "Cultural Heritage",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 10,
-    title: "Golden Cathedral",
-    image: "/lovable-uploads/51c2463f-fa2d-4990-adea-80a35a205610.png",
-    dimensions: "90 x 75 cm",
-    medium: "Oil on Canvas",
-    year: 2024,
-    description: "A magnificent architectural composition featuring Georgian church towers and traditional buildings bathed in golden light.",
-    category: "Landscape",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 11,
-    title: "Traditional Dancers",
-    image: "/lovable-uploads/4fc542f8-6819-4ab6-ab09-b2181006812c.png",
-    dimensions: "85 x 70 cm",
-    medium: "Acrylic on Canvas",
-    year: 2024,
-    description: "Dynamic figures in traditional Georgian dance costumes, capturing the energy and grace of folk dance traditions.",
-    category: "Cultural Heritage",
-    period: "Contemporary (2020-2024)"
-  },
-  {
-    id: 12,
-    title: "Woman in Red Veil",
-    image: "/lovable-uploads/c27bb1d3-7414-4be5-971f-9bc2a1dbd3b6.png",
-    dimensions: "70 x 55 cm",
-    medium: "Mixed Media",
-    year: 2024,
-    description: "An intimate portrait of a woman in traditional red veil, painted with warm earth tones that convey deep emotion and cultural identity.",
-    category: "Portrait",
-    period: "Contemporary (2020-2024)"
-  }
-];
-
 const Gallery = () => {
+  const { artworks: supabaseArtworks, categories, isLoading, error } = useArtworks();
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [periodFilter, setPeriodFilter] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  const categories = [
-    'All', 
-    'Landscape', 
-    'Portrait', 
-    'Still Life', 
-    'Religious', 
-    'Abstract',
-    'Cultural Heritage'
-  ];
+  // Convert Supabase artworks to the expected format
+  const convertedArtworks: Artwork[] = supabaseArtworks
+    .filter(artwork => artwork.is_published)
+    .map((artwork: SupabaseArtwork) => {
+      const category = categories.find(cat => cat.id === artwork.category_id);
+      return {
+        id: parseInt(artwork.id.replace(/-/g, '').substring(0, 8), 16),
+        title: artwork.title,
+        image: artwork.image_url || '/placeholder.svg',
+        dimensions: artwork.dimensions || '',
+        medium: artwork.medium || '',
+        year: artwork.year_created || new Date().getFullYear(),
+        description: artwork.description || '',
+        category: category?.name || 'Uncategorized',
+        period: getPeriodFromYear(artwork.year_created || new Date().getFullYear()),
+        price: artwork.price ? `$${artwork.price}` : undefined
+      };
+    });
 
-  const periods = [
+  const availableCategories = ['All', ...Array.from(new Set(convertedArtworks.map(artwork => artwork.category)))];
+  const availablePeriods = [
     'All',
-    'Contemporary (2020-2024)'
-  ];
+    'Contemporary (2020-2024)',
+    'Modern (2000-2019)',
+    'Late 20th Century (1980-1999)',
+    'Mid 20th Century (1950-1979)',
+    'Early 20th Century (1900-1949)',
+    'Historical (Pre-1900)'
+  ].filter(period => 
+    period === 'All' || convertedArtworks.some(artwork => artwork.period === period)
+  );
 
-  const filteredArtworks = artworks.filter(artwork => {
+  const filteredArtworks = convertedArtworks.filter(artwork => {
     const categoryMatch = categoryFilter === 'All' || artwork.category === categoryFilter;
     const periodMatch = periodFilter === 'All' || artwork.period === periodFilter;
     return categoryMatch && periodMatch;
@@ -184,7 +68,6 @@ const Gallery = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentArtworks = filteredArtworks.slice(startIndex, startIndex + itemsPerPage);
 
-  // Reset to page 1 when filters change
   const handleCategoryFilterChange = (category: string) => {
     setCategoryFilter(category);
     setCurrentPage(1);
@@ -194,6 +77,45 @@ const Gallery = () => {
     setPeriodFilter(period);
     setCurrentPage(1);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Navigation />
+        <div className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading gallery...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <Navigation />
+        <div className="py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-4">
+                <p className="text-destructive font-medium">Failed to load gallery: {error}</p>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -215,7 +137,7 @@ const Gallery = () => {
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Filter by Period</h3>
               <div className="flex flex-wrap justify-center gap-3">
-                {periods.map((period) => (
+                {availablePeriods.map((period) => (
                   <button
                     key={period}
                     onClick={() => handlePeriodFilterChange(period)}
@@ -235,7 +157,7 @@ const Gallery = () => {
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Filter by Category</h3>
               <div className="flex flex-wrap justify-center gap-3">
-                {categories.map((category) => (
+                {availableCategories.map((category) => (
                   <button
                     key={category}
                     onClick={() => handleCategoryFilterChange(category)}
@@ -266,6 +188,10 @@ const Gallery = () => {
                     src={artwork.image}
                     alt={artwork.title}
                     className="w-full h-80 object-cover transition-transform duration-500 hover:scale-110"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-4 left-4 text-white">
@@ -281,6 +207,7 @@ const Gallery = () => {
                   <div className="space-y-1 text-sm text-muted-foreground">
                     <p>{artwork.dimensions} • {artwork.medium}</p>
                     <p>{artwork.year} • {artwork.period}</p>
+                    {artwork.price && <p className="font-medium text-primary">{artwork.price}</p>}
                   </div>
                   <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
                     {artwork.description}
@@ -289,6 +216,15 @@ const Gallery = () => {
               </div>
             ))}
           </div>
+
+          {/* No results message */}
+          {currentArtworks.length === 0 && !isLoading && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                No artworks found matching your filters.
+              </p>
+            </div>
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (

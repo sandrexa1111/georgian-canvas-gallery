@@ -26,6 +26,16 @@ export interface Category {
   created_at: string;
 }
 
+// Helper function to determine period based on year
+export const getPeriodFromYear = (year: number): string => {
+  if (year >= 2020) return 'Contemporary (2020-2024)';
+  if (year >= 2000) return 'Modern (2000-2019)';
+  if (year >= 1980) return 'Late 20th Century (1980-1999)';
+  if (year >= 1950) return 'Mid 20th Century (1950-1979)';
+  if (year >= 1900) return 'Early 20th Century (1900-1949)';
+  return 'Historical (Pre-1900)';
+};
+
 export const useArtworks = () => {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
