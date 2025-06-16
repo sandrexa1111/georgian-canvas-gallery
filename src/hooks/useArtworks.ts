@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,45 +30,72 @@ export const useArtworks = () => {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchArtworks = async () => {
+  const fetchArtworks = useCallback(async () => {
     try {
+      setError(null);
       const { data, error } = await supabase
         .from('artworks')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching artworks:', error);
+        setError(error.message);
+        setArtworks([]);
+        return;
+      }
+      
       setArtworks(data || []);
     } catch (error) {
       console.error('Error fetching artworks:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch artworks';
+      setError(errorMessage);
+      setArtworks([]);
       toast({
         title: "Error",
-        description: "Failed to fetch artworks",
+        description: errorMessage,
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
+      setError(null);
       const { data, error } = await supabase
         .from('categories')
         .select('*')
         .order('name');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching categories:', error);
+        setError(error.message);
+        setCategories([]);
+        return;
+      }
+      
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch categories';
+      setError(errorMessage);
+      setCategories([]);
       toast({
         title: "Error",
-        description: "Failed to fetch categories",
+        description: errorMessage,
         variant: "destructive",
       });
     }
-  };
+  }, [toast]);
+
+  const refetch = useCallback(async () => {
+    setIsLoading(true);
+    await Promise.all([fetchArtworks(), fetchCategories()]);
+    setIsLoading(false);
+  }, [fetchArtworks, fetchCategories]);
 
   const addArtwork = async (artworkData: Omit<Artwork, 'id' | 'created_at' | 'updated_at'>) => {
     try {
@@ -163,16 +190,18 @@ export const useArtworks = () => {
     };
 
     loadData();
-  }, []);
+  }, [fetchArtworks, fetchCategories]);
 
   return {
     artworks,
     categories,
     isLoading,
+    error,
     addArtwork,
     updateArtwork,
     deleteArtwork,
     fetchArtworks,
     fetchCategories,
+    refetch,
   };
 };
