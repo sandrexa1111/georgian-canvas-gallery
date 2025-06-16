@@ -41,44 +41,40 @@ const Admin = () => {
 
         console.log('Session found, checking admin role for user:', session.user.id);
         
-        // Check if user has admin role with timeout
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Admin role check timeout')), 10000)
-        );
-        
-        const roleCheckPromise = supabase.rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'admin'
-        });
+        // Check if user has admin role with simplified approach
+        try {
+          const { data: roleData, error: roleError } = await supabase.rpc('has_role', {
+            _user_id: session.user.id,
+            _role: 'admin'
+          });
 
-        const { data: roleData, error: roleError } = await Promise.race([
-          roleCheckPromise,
-          timeoutPromise
-        ]) as any;
+          if (!isMounted) return;
 
-        if (!isMounted) return;
-
-        if (roleError) {
-          console.error('Role check error:', roleError);
+          if (roleError) {
+            console.error('Role check error:', roleError);
+            // If role check fails, assume user needs to be admin for first time
+            console.log('Role check failed, user might not have admin role yet');
+            setAuthError('Access denied: Admin privileges required');
+            setIsAuthenticated(false);
+          } else if (roleData) {
+            console.log('Admin role confirmed');
+            setIsAuthenticated(true);
+            localStorage.setItem('gallery_admin_auth', 'authenticated');
+          } else {
+            console.log('User does not have admin role');
+            setAuthError('Access denied: Admin privileges required');
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Role check failed with exception:', error);
           setAuthError('Failed to verify admin privileges');
           setIsAuthenticated(false);
-          await supabase.auth.signOut();
-        } else if (roleData) {
-          console.log('Admin role confirmed');
-          setIsAuthenticated(true);
-          localStorage.setItem('gallery_admin_auth', 'authenticated');
-        } else {
-          console.log('User does not have admin role');
-          setAuthError('Access denied: Admin privileges required');
-          setIsAuthenticated(false);
-          await supabase.auth.signOut();
         }
       } catch (error) {
         if (!isMounted) return;
         console.error('Authentication check failed:', error);
         setAuthError('Authentication check failed');
         setIsAuthenticated(false);
-        await supabase.auth.signOut();
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -88,7 +84,7 @@ const Admin = () => {
 
     checkAuth();
 
-    // Listen for auth changes with simplified logic
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!isMounted) return;
       
@@ -98,7 +94,9 @@ const Admin = () => {
         setIsAuthenticated(false);
         setAuthError(null);
         localStorage.removeItem('gallery_admin_auth');
+        setIsLoading(false);
       } else if (event === 'SIGNED_IN' && session?.user) {
+        setIsLoading(true);
         // Re-check admin role for new sessions
         try {
           const { data: roleData, error: roleError } = await supabase.rpc('has_role', {
@@ -114,15 +112,15 @@ const Admin = () => {
             } else {
               setIsAuthenticated(false);
               setAuthError('Access denied: Admin privileges required');
-              await supabase.auth.signOut();
             }
+            setIsLoading(false);
           }
         } catch (error) {
           if (isMounted) {
             console.error('Role check failed during sign in:', error);
             setIsAuthenticated(false);
             setAuthError('Failed to verify admin privileges');
-            await supabase.auth.signOut();
+            setIsLoading(false);
           }
         }
       }
@@ -170,12 +168,21 @@ const Admin = () => {
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-4">
             <p className="text-destructive font-medium">{authError}</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Please contact the administrator to get admin privileges.
+            </p>
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mr-2"
           >
             Try Again
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
+          >
+            Sign Out
           </button>
         </div>
       </div>

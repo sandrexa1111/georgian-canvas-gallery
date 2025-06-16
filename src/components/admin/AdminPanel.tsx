@@ -1,18 +1,18 @@
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, Plus, Edit, Trash2, BookOpen, Image, AlertCircle, RefreshCw } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, BookOpen, Image, AlertCircle, RefreshCw, MessageCircle, Star, Check, X } from 'lucide-react';
 import { ArtworkForm } from './ArtworkForm';
 import { BlogForm } from './BlogForm';
 import { useArtworks, type Artwork } from '@/hooks/useArtworks';
 import { useBlogPosts, type BlogPost } from '@/hooks/useBlogPosts';
+import { useComments, type Comment } from '@/hooks/useComments';
 
 interface AdminPanelProps {
   onLogout: () => void;
 }
 
 export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
-  const [activeTab, setActiveTab] = useState<'artworks' | 'blog'>('artworks');
+  const [activeTab, setActiveTab] = useState<'artworks' | 'blog' | 'comments'>('artworks');
   const [isArtworkFormOpen, setIsArtworkFormOpen] = useState(false);
   const [isBlogFormOpen, setIsBlogFormOpen] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
@@ -42,6 +42,23 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     deleteBlogPost,
     refetch: refetchBlog
   } = useBlogPosts();
+
+  // Comments management
+  const {
+    comments = [],
+    isLoading: commentsLoading,
+    error: commentsError,
+    fetchComments,
+    approveComment,
+    deleteComment
+  } = useComments();
+
+  // Load comments when comments tab is active
+  useEffect(() => {
+    if (activeTab === 'comments') {
+      fetchComments();
+    }
+  }, [activeTab, fetchComments]);
 
   const handleLogout = async () => {
     console.log('Logout button clicked');
@@ -125,17 +142,45 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     }
   };
 
+  const handleApproveComment = async (id: string) => {
+    try {
+      console.log('Approving comment:', id);
+      await approveComment(id);
+      console.log('Comment approved successfully');
+    } catch (error) {
+      console.error('Failed to approve comment:', error);
+    }
+  };
+
+  const handleDeleteComment = async (id: string) => {
+    if (confirm('Are you sure you want to delete this comment?')) {
+      try {
+        console.log('Deleting comment:', id);
+        await deleteComment(id);
+        console.log('Comment deleted successfully');
+      } catch (error) {
+        console.error('Failed to delete comment:', error);
+      }
+    }
+  };
+
   const handleRefresh = () => {
     console.log('Refresh button clicked for tab:', activeTab);
     if (activeTab === 'artworks') {
       refetchArtworks();
-    } else {
+    } else if (activeTab === 'blog') {
       refetchBlog();
+    } else if (activeTab === 'comments') {
+      fetchComments();
     }
   };
 
-  const isLoading = activeTab === 'artworks' ? artworksLoading : blogLoading;
-  const hasError = activeTab === 'artworks' ? artworksError : blogError;
+  const isLoading = activeTab === 'artworks' ? artworksLoading : 
+                    activeTab === 'blog' ? blogLoading : commentsLoading;
+  const hasError = activeTab === 'artworks' ? artworksError : 
+                   activeTab === 'blog' ? blogError : commentsError;
+
+  const pendingComments = comments.filter(comment => !comment.is_approved);
 
   return (
     <div className="min-h-screen bg-background">
@@ -190,6 +235,22 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
             >
               <BookOpen size={16} />
               Blog Posts ({blogPosts.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('comments')}
+              className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'comments'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <MessageCircle size={16} />
+              Comments ({comments.length})
+              {pendingComments.length > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5 ml-1">
+                  {pendingComments.length}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -355,6 +416,120 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
                     <p className="text-muted-foreground text-lg">No blog posts added yet. Click "Add New Blog Post" to get started.</p>
                   </div>
                 )}
+              </>
+            )}
+
+            {activeTab === 'comments' && (
+              <>
+                <div className="space-y-6">
+                  {pendingComments.length > 0 && (
+                    <div>
+                      <h2 className="font-playfair text-2xl font-semibold mb-4 text-orange-600">
+                        Pending Approval ({pendingComments.length})
+                      </h2>
+                      <div className="space-y-4">
+                        {pendingComments.map((comment) => (
+                          <motion.div
+                            key={comment.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-orange-50 border border-orange-200 rounded-lg p-4"
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <h4 className="font-medium">{comment.user_name}</h4>
+                                <p className="text-sm text-gray-600">{comment.user_email}</p>
+                                <div className="flex items-center gap-1 mt-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star
+                                      key={star}
+                                      size={14}
+                                      className={star <= comment.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <span className="text-sm text-gray-500">
+                                {new Date(comment.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                            
+                            <p className="text-sm mb-3">{comment.comment_text}</p>
+                            
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleApproveComment(comment.id)}
+                                className="flex items-center gap-1 px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                              >
+                                <Check size={14} />
+                                Approve
+                              </button>
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="flex items-center gap-1 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                              >
+                                <X size={14} />
+                                Delete
+                              </button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <h2 className="font-playfair text-2xl font-semibold mb-4">
+                      Approved Comments ({comments.filter(c => c.is_approved).length})
+                    </h2>
+                    
+                    {comments.filter(c => c.is_approved).length === 0 ? (
+                      <div className="text-center py-12">
+                        <p className="text-muted-foreground text-lg">No approved comments yet.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {comments.filter(c => c.is_approved).map((comment) => (
+                          <motion.div
+                            key={comment.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="bg-card rounded-lg p-4 border border-border"
+                          >
+                            <div className="flex justify-between items-start mb-3">
+                              <div>
+                                <h4 className="font-medium">{comment.user_name}</h4>
+                                <div className="flex items-center gap-1 mt-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star
+                                      key={star}
+                                      size={14}
+                                      className={star <= comment.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-muted-foreground">
+                                  {new Date(comment.created_at).toLocaleDateString()}
+                                </span>
+                                <button
+                                  onClick={() => handleDeleteComment(comment.id)}
+                                  className="flex items-center gap-1 px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                >
+                                  <Trash2 size={12} />
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                            
+                            <p className="text-sm">{comment.comment_text}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </>
             )}
           </>
