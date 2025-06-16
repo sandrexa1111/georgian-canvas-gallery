@@ -17,11 +17,17 @@ export const Navigation = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  console.log('Navigation render - current path:', location.pathname);
+
   return (
     <nav className="bg-card/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="font-playfair text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
+          <Link 
+            to="/" 
+            className="font-playfair text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
             Levan Mosiashvili
           </Link>
 
@@ -47,6 +53,7 @@ export const Navigation = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-muted-foreground hover:text-foreground p-2"
+              aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

@@ -16,9 +16,16 @@ const BlogPost = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (!slug) return;
+      if (!slug) {
+        setNotFound(true);
+        setIsLoading(false);
+        return;
+      }
 
       try {
+        console.log('Fetching blog post with slug:', slug);
+        setIsLoading(true);
+        
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
@@ -27,16 +34,21 @@ const BlogPost = () => {
           .single();
 
         if (error) {
+          console.error('Error fetching blog post:', error);
           if (error.code === 'PGRST116') {
+            console.log('Blog post not found');
             setNotFound(true);
           } else {
-            console.error('Error fetching blog post:', error);
+            console.error('Database error:', error);
+            setNotFound(true);
           }
         } else {
+          console.log('Blog post fetched successfully:', data);
           setPost(data);
         }
       } catch (error) {
-        console.error('Error fetching blog post:', error);
+        console.error('Error in fetchPost:', error);
+        setNotFound(true);
       } finally {
         setIsLoading(false);
       }
@@ -122,6 +134,11 @@ const BlogPost = () => {
                 src={post.featured_image_url}
                 alt={post.title}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  console.error('Featured image failed to load:', post.featured_image_url);
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
             </motion.div>
           )}

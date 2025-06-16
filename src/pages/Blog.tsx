@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 const Blog = () => {
   const { blogPosts, isLoading } = useBlogPosts();
 
+  console.log('Blog page render - isLoading:', isLoading, 'blogPosts count:', blogPosts.length);
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -63,6 +65,7 @@ const Blog = () => {
           {blogPosts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No blog posts published yet.</p>
+              <p className="text-sm text-muted-foreground mt-2">Check back soon for new content!</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -80,6 +83,11 @@ const Blog = () => {
                         src={post.featured_image_url}
                         alt={post.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          console.error('Image failed to load:', post.featured_image_url);
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
                       />
                     </div>
                   )}
