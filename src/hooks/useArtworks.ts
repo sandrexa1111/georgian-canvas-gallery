@@ -26,14 +26,29 @@ export interface Category {
   created_at: string;
 }
 
-// Helper function to determine period based on year
+// Helper function to determine period based on year and style
 export const getPeriodFromYear = (year: number): string => {
-  if (year >= 2020) return 'Contemporary (2020-2024)';
-  if (year >= 2000) return 'Modern (2000-2019)';
-  if (year >= 1980) return 'Late 20th Century (1980-1999)';
-  if (year >= 1950) return 'Mid 20th Century (1950-1979)';
-  if (year >= 1900) return 'Early 20th Century (1900-1949)';
-  return 'Historical (Pre-1900)';
+  // New period classification based on Georgian and French periods
+  if (year >= 2010) return 'Abstract';
+  if (year >= 2005) return 'Cubism';
+  if (year >= 2000) return 'Modern';
+  if (year >= 1995) return 'Cityscape';
+  if (year >= 1990) return 'Animalistic';
+  if (year >= 1985) return 'Primitivism';
+  return 'Early Works';
+};
+
+// Get all available periods
+export const getAvailablePeriods = (): string[] => {
+  return [
+    'All',
+    'Primitivism',
+    'Animalistic', 
+    'Cityscape',
+    'Modern',
+    'Cubism',
+    'Abstract'
+  ];
 };
 
 export const useArtworks = () => {

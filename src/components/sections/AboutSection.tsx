@@ -57,10 +57,48 @@ export const AboutSection = () => {
             <div className="space-y-8">
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
                 Born in 1971 in Tbilisi, Levan Mosiashvili is a self-taught Georgian artist whose journey 
-                spans from biological sciences to becoming an internationally recognized painter. With four 
-                distinct art periods - Georgian, French, Modern, and Abstract - his work has captured the 
-                hearts of collectors across the globe.
+                spans from biological sciences to becoming an internationally recognized painter. His artistic 
+                evolution encompasses distinct periods that reflect his cultural heritage and international 
+                influences.
               </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                <div className="bg-card/50 border border-border/50 rounded-xl p-6">
+                  <h3 className="font-playfair text-xl font-semibold text-primary mb-4">Georgian Periods</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Primitivism</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Animalistic</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Cityscape</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-card/50 border border-border/50 rounded-xl p-6">
+                  <h3 className="font-playfair text-xl font-semibold text-primary mb-4">French Periods</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Modern</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Cubism</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <span className="font-medium">Abstract</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               
               <p className="text-lg text-foreground/70 font-inter leading-relaxed">
                 In 2008, after winning numerous international art competitions, Levan became the first 

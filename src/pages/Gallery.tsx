@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ArtworkModal } from '@/components/ArtworkModal';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Navigation } from '@/components/Navigation';
-import { useArtworks, getPeriodFromYear, type Artwork as SupabaseArtwork, type Category } from '@/hooks/useArtworks';
+import { useArtworks, getPeriodFromYear, getAvailablePeriods, type Artwork as SupabaseArtwork, type Category } from '@/hooks/useArtworks';
 
 interface Artwork {
   id: number;
@@ -46,15 +46,7 @@ const Gallery = () => {
     });
 
   const availableCategories = ['All', ...Array.from(new Set(convertedArtworks.map(artwork => artwork.category)))];
-  const availablePeriods = [
-    'All',
-    'Contemporary (2020-2024)',
-    'Modern (2000-2019)',
-    'Late 20th Century (1980-1999)',
-    'Mid 20th Century (1950-1979)',
-    'Early 20th Century (1900-1949)',
-    'Historical (Pre-1900)'
-  ].filter(period => 
+  const availablePeriods = getAvailablePeriods().filter(period => 
     period === 'All' || convertedArtworks.some(artwork => artwork.period === period)
   );
 
@@ -126,8 +118,8 @@ const Gallery = () => {
           <div className="text-center mb-16">
             <h1 className="font-playfair text-5xl font-bold mb-6">Art Gallery</h1>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-              Explore a collection of paintings that capture the essence of Georgian culture, 
-              from traditional landscapes to contemporary abstract expressions.
+              Explore a collection of paintings that span from Georgian heritage to French influences, 
+              showcasing the artistic evolution through different periods and styles.
             </p>
           </div>
 
@@ -135,7 +127,7 @@ const Gallery = () => {
           <div className="space-y-6 mb-12">
             {/* Period Filter */}
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Filter by Period</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Filter by Art Period</h3>
               <div className="flex flex-wrap justify-center gap-3">
                 {availablePeriods.map((period) => (
                   <button
@@ -195,9 +187,11 @@ const Gallery = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-4 left-4 text-white">
-                      <p className="text-sm text-gray-300">{artwork.category}</p>
+                      <div className="inline-block px-2 py-1 bg-primary/80 rounded-full text-xs font-medium mb-2">
+                        {artwork.period}
+                      </div>
                       <h3 className="font-playfair text-xl font-semibold">{artwork.title}</h3>
-                      <p className="text-sm text-gray-400">{artwork.year} • {artwork.period}</p>
+                      <p className="text-sm text-gray-400">{artwork.year} • {artwork.category}</p>
                     </div>
                   </div>
                 </div>

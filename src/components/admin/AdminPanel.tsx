@@ -18,32 +18,30 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
   const [editingBlogPost, setEditingBlogPost] = useState<BlogPost | null>(null);
 
-  // Only load data for the active tab to improve performance
-  const shouldLoadArtworks = activeTab === 'artworks';
-  const shouldLoadBlog = activeTab === 'blog';
+  console.log('AdminPanel render - activeTab:', activeTab);
 
-  console.log('AdminPanel render - activeTab:', activeTab, 'shouldLoadArtworks:', shouldLoadArtworks, 'shouldLoadBlog:', shouldLoadBlog);
+  // Always load artworks data since we need it for the tab count
+  const {
+    artworks = [],
+    categories = [],
+    isLoading: artworksLoading,
+    error: artworksError,
+    addArtwork,
+    updateArtwork,
+    deleteArtwork,
+    refetch: refetchArtworks
+  } = useArtworks();
 
-  const artworkHook = useArtworks();
-  const blogHook = useBlogPosts();
-
-  // Extract values with fallbacks
-  const artworks = shouldLoadArtworks ? (artworkHook.artworks || []) : [];
-  const categories = shouldLoadArtworks ? (artworkHook.categories || []) : [];
-  const artworksLoading = shouldLoadArtworks ? artworkHook.isLoading : false;
-  const artworksError = shouldLoadArtworks ? artworkHook.error : null;
-
-  const blogPosts = shouldLoadBlog ? (blogHook.blogPosts || []) : [];
-  const blogLoading = shouldLoadBlog ? blogHook.isLoading : false;
-  const blogError = shouldLoadBlog ? blogHook.error : null;
-
-  useEffect(() => {
-    console.log('AdminPanel mounted, active tab:', activeTab);
-  }, []);
-
-  useEffect(() => {
-    console.log('Tab changed to:', activeTab);
-  }, [activeTab]);
+  // Only load blog data when needed
+  const {
+    blogPosts = [],
+    isLoading: blogLoading,
+    error: blogError,
+    addBlogPost,
+    updateBlogPost,
+    deleteBlogPost,
+    refetch: refetchBlog
+  } = useBlogPosts();
 
   const handleLogout = async () => {
     console.log('Logout button clicked');
@@ -58,7 +56,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
   const handleAddArtwork = async (artworkData: any) => {
     try {
       console.log('Adding artwork:', artworkData.title);
-      await artworkHook.addArtwork(artworkData);
+      await addArtwork(artworkData);
       setIsArtworkFormOpen(false);
       console.log('Artwork added successfully');
     } catch (error) {
@@ -71,7 +69,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     
     try {
       console.log('Updating artwork:', editingArtwork.id);
-      await artworkHook.updateArtwork(editingArtwork.id, artworkData);
+      await updateArtwork(editingArtwork.id, artworkData);
       setEditingArtwork(null);
       console.log('Artwork updated successfully');
     } catch (error) {
@@ -83,7 +81,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     if (confirm('Are you sure you want to delete this artwork?')) {
       try {
         console.log('Deleting artwork:', id);
-        await artworkHook.deleteArtwork(id);
+        await deleteArtwork(id);
         console.log('Artwork deleted successfully');
       } catch (error) {
         console.error('Failed to delete artwork:', error);
@@ -94,7 +92,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
   const handleAddBlogPost = async (postData: any) => {
     try {
       console.log('Adding blog post:', postData.title);
-      await blogHook.addBlogPost(postData);
+      await addBlogPost(postData);
       setIsBlogFormOpen(false);
       console.log('Blog post added successfully');
     } catch (error) {
@@ -107,7 +105,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     
     try {
       console.log('Updating blog post:', editingBlogPost.id);
-      await blogHook.updateBlogPost(editingBlogPost.id, postData);
+      await updateBlogPost(editingBlogPost.id, postData);
       setEditingBlogPost(null);
       console.log('Blog post updated successfully');
     } catch (error) {
@@ -119,7 +117,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
       try {
         console.log('Deleting blog post:', id);
-        await blogHook.deleteBlogPost(id);
+        await deleteBlogPost(id);
         console.log('Blog post deleted successfully');
       } catch (error) {
         console.error('Failed to delete blog post:', error);
@@ -129,15 +127,15 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
 
   const handleRefresh = () => {
     console.log('Refresh button clicked for tab:', activeTab);
-    if (activeTab === 'artworks' && artworkHook.refetch) {
-      artworkHook.refetch();
-    } else if (activeTab === 'blog' && blogHook.refetch) {
-      blogHook.refetch();
+    if (activeTab === 'artworks') {
+      refetchArtworks();
+    } else {
+      refetchBlog();
     }
   };
 
-  const isLoading = artworksLoading || blogLoading;
-  const hasError = artworksError || blogError;
+  const isLoading = activeTab === 'artworks' ? artworksLoading : blogLoading;
+  const hasError = activeTab === 'artworks' ? artworksError : blogError;
 
   return (
     <div className="min-h-screen bg-background">
@@ -206,7 +204,7 @@ export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
               <span className="font-medium">Error loading data</span>
             </div>
             <p className="text-sm text-destructive/80 mt-1">
-              {artworksError || blogError || 'An unexpected error occurred'}
+              {hasError || 'An unexpected error occurred'}
             </p>
             <button
               onClick={handleRefresh}

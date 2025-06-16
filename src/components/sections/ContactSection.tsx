@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { Mail, Facebook, Instagram, MapPin, Phone } from 'lucide-react';
+import { Mail, Instagram, MapPin, Phone } from 'lucide-react';
 
 export const ContactSection = () => {
   return (
@@ -43,8 +43,8 @@ export const ContactSection = () => {
                 </div>
                 <div className="space-y-1">
                   <p className="font-medium text-lg font-dm-sans">Email</p>
-                  <a href="mailto:info@levanmosiashvili.com" className="text-muted-foreground hover:text-primary transition-colors font-inter">
-                    info@levanmosiashvili.com
+                  <a href="mailto:lmosiashvili@hotmail.com" className="text-muted-foreground hover:text-primary transition-colors font-inter">
+                    lmosiashvili@hotmail.com
                   </a>
                 </div>
               </motion.div>
@@ -59,7 +59,9 @@ export const ContactSection = () => {
                 </div>
                 <div className="space-y-1">
                   <p className="font-medium text-lg font-dm-sans">Phone</p>
-                  <p className="text-muted-foreground font-inter">+995 555 123 456</p>
+                  <a href="tel:+995599565923" className="text-muted-foreground hover:text-primary transition-colors font-inter">
+                    599 56 59 23
+                  </a>
                 </div>
               </motion.div>
 
@@ -82,17 +84,7 @@ export const ContactSection = () => {
               <h4 className="font-semibold text-xl font-dm-sans">Follow My Work</h4>
               <div className="flex space-x-4">
                 <motion.a
-                  href="https://www.facebook.com/levanmosiashviliart"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 rounded-full bg-secondary/50 border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Facebook size={24} className="text-primary" />
-                </motion.a>
-                <motion.a
-                  href="#"
+                  href="https://www.instagram.com/mosiashvililevan/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-4 rounded-full bg-secondary/50 border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
