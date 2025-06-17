@@ -1,14 +1,18 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Palette, FileText, MessageSquare, Settings } from 'lucide-react';
+import { Palette, FileText, MessageSquare, Settings, LogOut } from 'lucide-react';
 import { ArtworkManagement } from './ArtworkManagement';
 import { BlogManagement } from './BlogManagement';
 import { CommentModeration } from './CommentModeration';
 
 type TabType = 'artworks' | 'blog' | 'comments' | 'settings';
 
-export const AdminPanel = () => {
+interface AdminPanelProps {
+  onLogout: () => Promise<void>;
+}
+
+export const AdminPanel = ({ onLogout }: AdminPanelProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('artworks');
 
   const tabs = [
@@ -41,9 +45,19 @@ export const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="font-playfair text-4xl font-bold mb-2">Admin Panel</h1>
-          <p className="text-muted-foreground">Manage your gallery content and settings</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="font-playfair text-4xl font-bold mb-2">Admin Panel</h1>
+            <p className="text-muted-foreground">Manage your gallery content and settings</p>
+          </div>
+          
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
         </div>
 
         {/* Tab Navigation */}
