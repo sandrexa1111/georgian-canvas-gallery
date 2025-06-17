@@ -10,22 +10,21 @@ const Admin = () => {
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('Admin component mounting, checking authentication...');
+    console.log('Admin: Starting authentication check...');
     
     let isMounted = true;
 
-    // Check authentication state
     const checkAuth = async () => {
       try {
         setAuthError(null);
-        console.log('Getting current session...');
         
+        // Get current session
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (!isMounted) return;
         
         if (sessionError) {
-          console.error('Session error:', sessionError);
+          console.error('Admin: Session error:', sessionError);
           setAuthError('Failed to check authentication status');
           setIsAuthenticated(false);
           setIsLoading(false);
@@ -33,15 +32,15 @@ const Admin = () => {
         }
 
         if (!session?.user) {
-          console.log('No active session found');
+          console.log('Admin: No active session found');
           setIsAuthenticated(false);
           setIsLoading(false);
           return;
         }
 
-        console.log('Session found, checking admin role for user:', session.user.id);
+        console.log('Admin: Session found, checking admin role for user:', session.user.id);
         
-        // Check if user has admin role with simplified approach
+        // Check admin role with error handling
         try {
           const { data: roleData, error: roleError } = await supabase.rpc('has_role', {
             _user_id: session.user.id,
@@ -51,28 +50,43 @@ const Admin = () => {
           if (!isMounted) return;
 
           if (roleError) {
-            console.error('Role check error:', roleError);
-            // If role check fails, assume user needs to be admin for first time
-            console.log('Role check failed, user might not have admin role yet');
-            setAuthError('Access denied: Admin privileges required');
-            setIsAuthenticated(false);
+            console.error('Admin: Role check error:', roleError);
+            // If the function doesn't exist or fails, try direct role check
+            const { data: roleCheck, error: directRoleError } = await supabase
+              .from('user_roles')
+              .select('role')
+              .eq('user_id', session.user.id)
+              .eq('role', 'admin')
+              .single();
+
+            if (directRoleError && directRoleError.code !== 'PGRST116') {
+              console.error('Admin: Direct role check failed:', directRoleError);
+              setAuthError('Failed to verify admin privileges');
+              setIsAuthenticated(false);
+            } else if (roleCheck) {
+              console.log('Admin: Admin role confirmed via direct check');
+              setIsAuthenticated(true);
+            } else {
+              console.log('Admin: User does not have admin role');
+              setAuthError('Access denied: Admin privileges required');
+              setIsAuthenticated(false);
+            }
           } else if (roleData) {
-            console.log('Admin role confirmed');
+            console.log('Admin: Admin role confirmed via function');
             setIsAuthenticated(true);
-            localStorage.setItem('gallery_admin_auth', 'authenticated');
           } else {
-            console.log('User does not have admin role');
+            console.log('Admin: User does not have admin role');
             setAuthError('Access denied: Admin privileges required');
             setIsAuthenticated(false);
           }
         } catch (error) {
-          console.error('Role check failed with exception:', error);
+          console.error('Admin: Role check failed with exception:', error);
           setAuthError('Failed to verify admin privileges');
           setIsAuthenticated(false);
         }
       } catch (error) {
         if (!isMounted) return;
-        console.error('Authentication check failed:', error);
+        console.error('Admin: Authentication check failed:', error);
         setAuthError('Authentication check failed');
         setIsAuthenticated(false);
       } finally {
@@ -84,70 +98,47 @@ const Admin = () => {
 
     checkAuth();
 
-    // Listen for auth changes
+    // Listen for auth changes with simplified logic
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!isMounted) return;
       
-      console.log('Auth state changed:', event);
+      console.log('Admin: Auth state changed:', event);
       
       if (event === 'SIGNED_OUT' || !session) {
         setIsAuthenticated(false);
         setAuthError(null);
-        localStorage.removeItem('gallery_admin_auth');
         setIsLoading(false);
       } else if (event === 'SIGNED_IN' && session?.user) {
+        // Re-run the full auth check
         setIsLoading(true);
-        // Re-check admin role for new sessions
-        try {
-          const { data: roleData, error: roleError } = await supabase.rpc('has_role', {
-            _user_id: session.user.id,
-            _role: 'admin'
-          });
-
-          if (isMounted) {
-            if (!roleError && roleData) {
-              setIsAuthenticated(true);
-              setAuthError(null);
-              localStorage.setItem('gallery_admin_auth', 'authenticated');
-            } else {
-              setIsAuthenticated(false);
-              setAuthError('Access denied: Admin privileges required');
-            }
-            setIsLoading(false);
-          }
-        } catch (error) {
-          if (isMounted) {
-            console.error('Role check failed during sign in:', error);
-            setIsAuthenticated(false);
-            setAuthError('Failed to verify admin privileges');
-            setIsLoading(false);
-          }
-        }
+        setTimeout(checkAuth, 100); // Small delay to ensure session is fully established
       }
     });
 
     return () => {
-      console.log('Admin component unmounting');
+      console.log('Admin: Component unmounting');
       isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const handleLogin = () => {
-    console.log('Admin login successful');
+    console.log('Admin: Login successful, setting authenticated state');
     setIsAuthenticated(true);
     setAuthError(null);
   };
 
   const handleLogout = async () => {
-    console.log('Admin logout initiated');
+    console.log('Admin: Logout initiated');
     try {
+      setIsLoading(true);
       await supabase.auth.signOut();
       setIsAuthenticated(false);
       setAuthError(null);
-      localStorage.removeItem('gallery_admin_auth');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Admin: Logout error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -172,18 +163,24 @@ const Admin = () => {
               Please contact the administrator to get admin privileges.
             </p>
           </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mr-2"
-          >
-            Try Again
-          </button>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
-          >
-            Sign Out
-          </button>
+          <div className="flex gap-2 justify-center">
+            <button
+              onClick={() => {
+                setAuthError(null);
+                setIsLoading(true);
+                window.location.reload();
+              }}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     );
