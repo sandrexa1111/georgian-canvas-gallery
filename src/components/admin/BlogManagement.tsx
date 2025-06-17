@@ -6,20 +6,20 @@ import { useBlogPosts, type BlogPost } from '@/hooks/useBlogPosts';
 import { BlogForm } from './BlogForm';
 
 export const BlogManagement = () => {
-  const { blogPosts, isLoading, error, fetchBlogPosts, createBlogPost, updateBlogPost, deleteBlogPost } = useBlogPosts();
+  const { blogPosts, isLoading, error, refetch, addBlogPost, updateBlogPost, deleteBlogPost } = useBlogPosts();
   const [showForm, setShowForm] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    fetchBlogPosts();
-  }, [fetchBlogPosts]);
+    refetch();
+  }, [refetch]);
 
   const handleSave = async (postData: any) => {
     try {
       if (editingPost) {
         await updateBlogPost(editingPost.id, postData);
       } else {
-        await createBlogPost(postData);
+        await addBlogPost(postData);
       }
       setShowForm(false);
       setEditingPost(null);
@@ -96,7 +96,7 @@ export const BlogManagement = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="font-playfair text-xl font-semibold">{post.title}</h3>
-                      {!post.published && (
+                      {!post.is_published && (
                         <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">
                           Draft
                         </span>
@@ -117,7 +117,7 @@ export const BlogManagement = () => {
                   </div>
 
                   <div className="flex gap-2 ml-4">
-                    {post.published && (
+                    {post.is_published && (
                       <button
                         onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
                         className="p-2 bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors"

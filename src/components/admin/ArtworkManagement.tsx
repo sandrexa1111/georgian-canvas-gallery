@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
@@ -6,20 +5,20 @@ import { useArtworks, type Artwork } from '@/hooks/useArtworks';
 import { ArtworkForm } from './ArtworkForm';
 
 export const ArtworkManagement = () => {
-  const { artworks, categories, isLoading, error, fetchArtworks, createArtwork, updateArtwork, deleteArtwork } = useArtworks();
+  const { artworks, categories, isLoading, error, refetch, addArtwork, updateArtwork, deleteArtwork } = useArtworks();
   const [showForm, setShowForm] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
 
   useEffect(() => {
-    fetchArtworks();
-  }, [fetchArtworks]);
+    refetch();
+  }, [refetch]);
 
   const handleSave = async (artworkData: any) => {
     try {
       if (editingArtwork) {
         await updateArtwork(editingArtwork.id, artworkData);
       } else {
-        await createArtwork(artworkData);
+        await addArtwork(artworkData);
       }
       setShowForm(false);
       setEditingArtwork(null);
