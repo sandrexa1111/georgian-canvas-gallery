@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { X } from 'lucide-react';
 import { CommentForm } from './CommentForm';
 import { CommentsList } from './CommentsList';
@@ -23,11 +24,12 @@ interface ArtworkModalProps {
 }
 
 export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) => {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   if (!isOpen) return null;
 
-  const handleRefreshComments = () => {
-    // This will trigger a re-render and fetch comments
-    console.log('Comments refreshed');
+  const handleCommentAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
   };
 
   return (
@@ -80,10 +82,10 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
           </div>
           
           <div className="mt-8 space-y-8">
-            <CommentsList artworkId={artwork.id.toString()} />
+            <CommentsList artworkId={artwork.id.toString()} refreshTrigger={refreshTrigger} />
             <CommentForm 
               artworkId={artwork.id.toString()} 
-              onCommentAdded={handleRefreshComments}
+              onCommentAdded={handleCommentAdded}
             />
           </div>
         </div>

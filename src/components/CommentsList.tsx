@@ -5,14 +5,15 @@ import { useComments } from '@/hooks/useComments';
 
 interface CommentsListProps {
   artworkId: string;
+  refreshTrigger?: number;
 }
 
-export const CommentsList = ({ artworkId }: CommentsListProps) => {
+export const CommentsList = ({ artworkId, refreshTrigger }: CommentsListProps) => {
   const { comments, isLoading, fetchComments } = useComments();
 
   useEffect(() => {
     fetchComments(artworkId);
-  }, [artworkId, fetchComments]);
+  }, [artworkId, fetchComments, refreshTrigger]);
 
   if (isLoading) {
     return (
