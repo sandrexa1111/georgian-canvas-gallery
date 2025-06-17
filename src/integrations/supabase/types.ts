@@ -33,6 +33,39 @@ export type Database = {
         }
         Relationships: []
       }
+      artwork_comments: {
+        Row: {
+          artwork_id: string
+          comment_text: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          rating: number
+          user_email: string
+          user_name: string
+        }
+        Insert: {
+          artwork_id: string
+          comment_text: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          rating: number
+          user_email: string
+          user_name: string
+        }
+        Update: {
+          artwork_id?: string
+          comment_text?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          rating?: number
+          user_email?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       artworks: {
         Row: {
           category_id: string | null
