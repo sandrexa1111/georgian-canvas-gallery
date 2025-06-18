@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X, Save, Upload } from 'lucide-react';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { BlogPost } from '@/hooks/useBlogPosts';
+import { ImageUpload } from './ImageUpload';
 
 interface BlogFormProps {
   post?: BlogPost | null;
@@ -137,6 +137,14 @@ export const BlogForm = ({ post, onSave, onCancel }: BlogFormProps) => {
     }
   };
 
+  const handleImageUpload = (url: string) => {
+    handleChange('featured_image_url', url);
+  };
+
+  const handleImageRemove = () => {
+    handleChange('featured_image_url', '');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -223,17 +231,13 @@ export const BlogForm = ({ post, onSave, onCancel }: BlogFormProps) => {
               {errors.content && <p className="text-red-500 text-xs mt-1">{errors.content}</p>}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Featured Image URL</label>
-              <Input
-                value={formData.featured_image_url}
-                onChange={(e) => handleChange('featured_image_url', e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                type="url"
-                className={errors.featured_image_url ? 'border-red-500' : ''}
+            <div className="md:col-span-2">
+              <ImageUpload
+                currentImageUrl={formData.featured_image_url}
+                onImageUpload={handleImageUpload}
+                onImageRemove={handleImageRemove}
                 disabled={isSubmitting}
               />
-              {errors.featured_image_url && <p className="text-red-500 text-xs mt-1">{errors.featured_image_url}</p>}
             </div>
 
             <div>
