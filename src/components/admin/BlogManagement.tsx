@@ -11,7 +11,8 @@ export const BlogManagement = () => {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    refetch();
+    // Fetch all posts including unpublished ones for admin view
+    refetch(true);
   }, [refetch]);
 
   const handleSave = async (postData: any) => {
@@ -23,6 +24,8 @@ export const BlogManagement = () => {
       }
       setShowForm(false);
       setEditingPost(null);
+      // Refresh the list to show the new/updated post
+      refetch(true);
     } catch (error) {
       console.error('Failed to save blog post:', error);
     }
@@ -32,6 +35,8 @@ export const BlogManagement = () => {
     if (confirm('Are you sure you want to delete this blog post?')) {
       try {
         await deleteBlogPost(id);
+        // Refresh the list after deletion
+        refetch(true);
       } catch (error) {
         console.error('Failed to delete blog post:', error);
       }
@@ -61,6 +66,12 @@ export const BlogManagement = () => {
     return (
       <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
         <p className="text-destructive font-medium">Error loading blog posts: {error}</p>
+        <button
+          onClick={() => refetch(true)}
+          className="mt-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors"
+        >
+          Try Again
+        </button>
       </div>
     );
   }
@@ -99,6 +110,11 @@ export const BlogManagement = () => {
                       {!post.is_published && (
                         <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium">
                           Draft
+                        </span>
+                      )}
+                      {post.is_published && (
+                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                          Published
                         </span>
                       )}
                     </div>

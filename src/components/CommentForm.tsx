@@ -20,7 +20,18 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !comment.trim()) return;
+    
+    console.log('CommentForm: Submitting comment for artwork:', artworkId);
+    
+    if (!artworkId) {
+      console.error('CommentForm: No artwork ID provided');
+      return;
+    }
+    
+    if (!name.trim() || !email.trim() || !comment.trim()) {
+      console.error('CommentForm: Missing required fields');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -31,6 +42,8 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
         comment_text: comment.trim(),
         rating,
       });
+
+      console.log('CommentForm: Comment submitted successfully');
 
       // Reset form
       setName('');
@@ -44,7 +57,7 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
       
       onCommentAdded?.();
     } catch (error) {
-      console.error('Failed to submit comment:', error);
+      console.error('CommentForm: Failed to submit comment:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -98,6 +111,7 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
               className="w-full px-4 py-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               placeholder="Enter your full name"
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -113,6 +127,7 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
               className="w-full px-4 py-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
               placeholder="your@email.com"
               required
+              disabled={isSubmitting}
             />
           </div>
         </div>
@@ -131,6 +146,7 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
                   onMouseEnter={() => setHoveredRating(star)}
                   onMouseLeave={() => setHoveredRating(0)}
                   className="p-1 transition-transform hover:scale-110"
+                  disabled={isSubmitting}
                 >
                   <Star 
                     size={24} 
@@ -165,6 +181,8 @@ export const CommentForm = ({ artworkId, onCommentAdded }: CommentFormProps) => 
             className="w-full px-4 py-3 border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary focus:border-transparent resize-none transition-all"
             placeholder="Share your thoughts about this artwork... What did you love about it? How did it make you feel?"
             required
+            disabled={isSubmitting}
+            maxLength={500}
           />
           <div className="text-xs text-muted-foreground mt-1">
             {comment.length}/500 characters

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -26,17 +27,23 @@ export const useBlogPosts = () => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchBlogPosts = useCallback(async () => {
+  const fetchBlogPosts = useCallback(async (includeUnpublished = false) => {
     try {
       setIsLoading(true);
       setError(null);
-      console.log('Fetching blog posts...');
+      console.log('Fetching blog posts...', includeUnpublished ? 'including unpublished' : 'published only');
       
-      const { data, error } = await supabase
+      let query = supabase
         .from('blog_posts')
         .select('*')
-        .eq('is_published', true)
-        .order('published_at', { ascending: false });
+        .order('created_at', { ascending: false });
+
+      // Only filter by published status if not including unpublished
+      if (!includeUnpublished) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching blog posts:', error);
@@ -57,29 +64,50 @@ export const useBlogPosts = () => {
     }
   }, []);
 
-  const generateSlug = async (title: string): Promise<string> => {
+  const generateUniqueSlug = async (title: string): Promise<string> => {
     try {
-      console.log('Generating slug for title:', title);
-      const { data, error } = await supabase
-        .rpc('generate_blog_slug', { title });
+      console.log('Generating unique slug for title:', title);
       
-      if (error) {
-        console.error('Error generating slug:', error);
-        throw error;
-      }
-      
-      console.log('Generated slug:', data);
-      return data;
-    } catch (error) {
-      console.error('Slug generation failed, using fallback:', error);
-      // Fallback slug generation
-      return title
+      // Generate base slug
+      let baseSlug = title
         .toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s-]/g, '')
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
+
+      let slug = baseSlug;
+      let counter = 1;
+
+      // Check if slug exists and increment until we find a unique one
+      while (true) {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('id')
+          .eq('slug', slug)
+          .single();
+
+        if (error && error.code === 'PGRST116') {
+          // No matching record found, slug is unique
+          break;
+        } else if (error) {
+          console.error('Error checking slug uniqueness:', error);
+          throw error;
+        } else if (data) {
+          // Slug exists, try with counter
+          slug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+      }
+      
+      console.log('Generated unique slug:', slug);
+      return slug;
+    } catch (error) {
+      console.error('Slug generation failed:', error);
+      // Fallback with timestamp
+      const timestamp = Date.now();
+      return `${title.toLowerCase().replace(/[^a-z0-9]/g, '-').substring(0, 20)}-${timestamp}`;
     }
   };
 
@@ -103,8 +131,8 @@ export const useBlogPosts = () => {
         throw new Error('Title and content are required');
       }
 
-      // Generate slug and calculate reading time
-      const slug = await generateSlug(postData.title);
+      // Generate unique slug and calculate reading time
+      const slug = await generateUniqueSlug(postData.title);
       const readingTime = calculateReadingTime(postData.content);
       
       const insertData = {
@@ -137,10 +165,8 @@ export const useBlogPosts = () => {
       
       console.log('Blog post created successfully:', data);
       
-      // Only update local state if published
-      if (data.is_published) {
-        setBlogPosts(prev => [data, ...prev]);
-      }
+      // Update local state with new post
+      setBlogPosts(prev => [data, ...prev]);
       
       toast({
         title: "Success",
@@ -254,6 +280,6 @@ export const useBlogPosts = () => {
     addBlogPost,
     updateBlogPost,
     deleteBlogPost,
-    refetch: fetchBlogPosts
+    refetch: (includeUnpublished = false) => fetchBlogPosts(includeUnpublished)
   };
 };

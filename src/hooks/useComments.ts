@@ -24,6 +24,7 @@ export const useComments = () => {
     try {
       setIsLoading(true);
       setError(null);
+      console.log('Fetching comments for artwork:', artworkId || 'all artworks');
       
       let query = supabase
         .from('artwork_comments')
@@ -40,9 +41,15 @@ export const useComments = () => {
         console.error('Error fetching comments:', error);
         setError(error.message);
         setComments([]);
+        toast({
+          title: "Error",
+          description: "Failed to load comments",
+          variant: "destructive",
+        });
         return;
       }
       
+      console.log('Comments fetched successfully:', data?.length || 0);
       setComments(data || []);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -61,15 +68,24 @@ export const useComments = () => {
 
   const addComment = async (commentData: Omit<Comment, 'id' | 'created_at' | 'is_approved'>) => {
     try {
+      console.log('Adding comment for artwork:', commentData.artwork_id);
+      
       const { data, error } = await supabase
         .from('artwork_comments')
         .insert([{ ...commentData, is_approved: false }])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error adding comment:', error);
+        throw error;
+      }
       
+      console.log('Comment added successfully:', data);
+      
+      // Add the new comment to the local state
       setComments(prev => [data, ...prev]);
+      
       toast({
         title: "Success",
         description: "Comment submitted for approval",
@@ -80,7 +96,7 @@ export const useComments = () => {
       console.error('Error adding comment:', error);
       toast({
         title: "Error",
-        description: "Failed to add comment",
+        description: "Failed to add comment. Please try again.",
         variant: "destructive",
       });
       throw error;
@@ -89,6 +105,8 @@ export const useComments = () => {
 
   const approveComment = async (id: string) => {
     try {
+      console.log('Approving comment:', id);
+      
       const { data, error } = await supabase
         .from('artwork_comments')
         .update({ is_approved: true })
@@ -96,7 +114,12 @@ export const useComments = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error approving comment:', error);
+        throw error;
+      }
+      
+      console.log('Comment approved successfully:', data);
       
       setComments(prev => prev.map(comment => 
         comment.id === id ? data : comment
@@ -121,12 +144,19 @@ export const useComments = () => {
 
   const deleteComment = async (id: string) => {
     try {
+      console.log('Deleting comment:', id);
+      
       const { error } = await supabase
         .from('artwork_comments')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting comment:', error);
+        throw error;
+      }
+      
+      console.log('Comment deleted successfully');
       
       setComments(prev => prev.filter(comment => comment.id !== id));
       toast({
