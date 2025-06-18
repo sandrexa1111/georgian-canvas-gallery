@@ -24,7 +24,12 @@ export const useComments = () => {
     try {
       setIsLoading(true);
       setError(null);
-      console.log('Fetching comments for artwork:', artworkId || 'all artworks');
+      
+      if (artworkId) {
+        console.log('Fetching comments for artwork:', artworkId);
+      } else {
+        console.log('Fetching all approved comments for public display');
+      }
       
       let query = supabase
         .from('artwork_comments')
@@ -33,6 +38,9 @@ export const useComments = () => {
 
       if (artworkId) {
         query = query.eq('artwork_id', artworkId);
+      } else {
+        // When fetching all comments for public display, only get approved ones
+        query = query.eq('is_approved', true);
       }
 
       const { data, error } = await query;
