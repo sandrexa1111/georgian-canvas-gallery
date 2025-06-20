@@ -36,7 +36,7 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
@@ -49,11 +49,14 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
     setRefreshTrigger(prev => prev + 1);
   };
 
-  // Close on backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
+  };
+
+  const handleCloseClick = () => {
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -64,13 +67,13 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
       onClick={handleBackdropClick}
     >
       <div className="bg-background rounded-lg w-full max-w-6xl max-h-[95vh] overflow-y-auto shadow-2xl my-4">
-        {/* Header - Sticky */}
+        {/* Header with close button */}
         <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border p-4 flex justify-between items-center z-10">
           <h2 className="font-playfair text-xl sm:text-2xl font-bold pr-4 truncate">
             {artwork.title}
           </h2>
           <button
-            onClick={onClose}
+            onClick={handleCloseClick}
             className="flex-shrink-0 p-2 hover:bg-muted rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Close modal"
           >
@@ -80,19 +83,27 @@ export const ArtworkModal = ({ artwork, isOpen, onClose }: ArtworkModalProps) =>
         
         <div className="p-4 sm:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Image Section */}
+            {/* Image Section with close overlay */}
             <div className="order-1">
               <div className="relative group">
                 <img
                   src={artwork.image}
                   alt={artwork.title}
-                  className="w-full h-auto rounded-lg shadow-lg cursor-zoom-in"
+                  className="w-full h-auto rounded-lg shadow-lg cursor-pointer"
+                  onClick={handleCloseClick}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/placeholder.svg';
                   }}
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <button
+                    onClick={handleCloseClick}
+                    className="bg-white/90 rounded-full p-3 shadow-lg hover:bg-white transition-colors"
+                  >
+                    <X size={24} className="text-black" />
+                  </button>
+                </div>
               </div>
             </div>
             

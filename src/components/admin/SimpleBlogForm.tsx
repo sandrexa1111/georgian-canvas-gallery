@@ -1,9 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { X, Save } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { BlogPost } from '@/hooks/useBlogPosts';
 import { SimpleImageUpload } from './SimpleImageUpload';
 
@@ -14,108 +11,65 @@ interface SimpleBlogFormProps {
 }
 
 export const SimpleBlogForm = ({ post, onSave, onCancel }: SimpleBlogFormProps) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    excerpt: '',
-    featured_image_url: '',
-    is_published: false,
-    is_featured: false,
-    tags: '',
-    meta_description: ''
-  });
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [excerpt, setExcerpt] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [isPublished, setIsPublished] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (post) {
-      setFormData({
-        title: post.title || '',
-        content: post.content || '',
-        excerpt: post.excerpt || '',
-        featured_image_url: post.featured_image_url || '',
-        is_published: post.is_published || false,
-        is_featured: post.is_featured || false,
-        tags: post.tags ? post.tags.join(', ') : '',
-        meta_description: post.meta_description || ''
-      });
+      setTitle(post.title || '');
+      setContent(post.content || '');
+      setExcerpt(post.excerpt || '');
+      setImageUrl(post.featured_image_url || '');
+      setIsPublished(post.is_published || false);
     }
   }, [post]);
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required';
-    }
-    
-    if (!formData.content.trim()) {
-      newErrors.content = 'Content is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    if (!title.trim() || !content.trim()) {
+      alert('Please fill in title and content');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      const tagsArray = formData.tags
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
-
       await onSave({
-        ...formData,
-        tags: tagsArray.length > 0 ? tagsArray : null
+        title: title.trim(),
+        content: content.trim(),
+        excerpt: excerpt.trim() || null,
+        featured_image_url: imageUrl.trim() || null,
+        is_published: isPublished
       });
     } catch (error) {
-      console.error('Error saving blog post:', error);
+      console.error('Error saving:', error);
+      alert('Failed to save blog post');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const autoGenerateExcerpt = () => {
-    if (formData.content && !formData.excerpt) {
-      const words = formData.content.replace(/<[^>]*>/g, '').split(' ');
-      const excerpt = words.slice(0, 30).join(' ') + (words.length > 30 ? '...' : '');
-      setFormData(prev => ({ ...prev, excerpt }));
+  const generateExcerpt = () => {
+    if (content && !excerpt) {
+      const words = content.replace(/<[^>]*>/g, '').split(' ');
+      setExcerpt(words.slice(0, 30).join(' ') + (words.length > 30 ? '...' : ''));
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-      onClick={(e) => e.target === e.currentTarget && onCancel()}
-    >
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-card rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
-      >
-        <div className="flex justify-between items-center p-6 border-b border-border">
-          <h2 className="font-playfair text-2xl font-bold">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center p-6 border-b">
+          <h2 className="text-2xl font-bold">
             {post ? 'Edit Blog Post' : 'Add New Blog Post'}
           </h2>
           <button
             onClick={onCancel}
-            className="p-2 hover:bg-secondary rounded-md transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-md"
             disabled={isSubmitting}
           >
             <X size={20} />
@@ -125,15 +79,15 @@ export const SimpleBlogForm = ({ post, onSave, onCancel }: SimpleBlogFormProps) 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-medium mb-2">Title *</label>
-            <Input
-              value={formData.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter blog post title"
-              className={errors.title ? 'border-red-500' : ''}
+              className="w-full p-3 border rounded-md"
               disabled={isSubmitting}
               required
             />
-            {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
           </div>
 
           <div>
@@ -141,100 +95,59 @@ export const SimpleBlogForm = ({ post, onSave, onCancel }: SimpleBlogFormProps) 
               <label className="block text-sm font-medium">Excerpt</label>
               <button
                 type="button"
-                onClick={autoGenerateExcerpt}
-                className="text-xs text-primary hover:text-primary/80"
+                onClick={generateExcerpt}
+                className="text-xs text-blue-600 hover:text-blue-800"
                 disabled={isSubmitting}
               >
                 Auto-generate
               </button>
             </div>
-            <Textarea
-              value={formData.excerpt}
-              onChange={(e) => handleChange('excerpt', e.target.value)}
-              placeholder="Brief description of the blog post"
+            <textarea
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
+              placeholder="Brief description"
               rows={3}
+              className="w-full p-3 border rounded-md"
               disabled={isSubmitting}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Content *</label>
-            <Textarea
-              value={formData.content}
-              onChange={(e) => handleChange('content', e.target.value)}
-              placeholder="Write your blog post content here... (HTML is supported)"
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Write your blog post content here..."
               rows={8}
-              className={errors.content ? 'border-red-500' : ''}
+              className="w-full p-3 border rounded-md"
               disabled={isSubmitting}
               required
             />
-            {errors.content && <p className="text-red-500 text-xs mt-1">{errors.content}</p>}
           </div>
 
           <SimpleImageUpload
-            currentImageUrl={formData.featured_image_url}
-            onImageUpload={(url) => handleChange('featured_image_url', url)}
-            onImageRemove={() => handleChange('featured_image_url', '')}
+            currentImageUrl={imageUrl}
+            onImageUpload={setImageUrl}
+            onImageRemove={() => setImageUrl('')}
             disabled={isSubmitting}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-2">Tags</label>
-              <Input
-                value={formData.tags}
-                onChange={(e) => handleChange('tags', e.target.value)}
-                placeholder="art, painting, inspiration"
-                disabled={isSubmitting}
-              />
-              <p className="text-xs text-muted-foreground mt-1">Separate tags with commas</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Meta Description</label>
-              <Textarea
-                value={formData.meta_description}
-                onChange={(e) => handleChange('meta_description', e.target.value)}
-                placeholder="SEO description (150-160 chars)"
-                rows={2}
-                disabled={isSubmitting}
-                maxLength={160}
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                {formData.meta_description.length}/160 characters
-              </p>
-            </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="published"
+              checked={isPublished}
+              onChange={(e) => setIsPublished(e.target.checked)}
+              disabled={isSubmitting}
+            />
+            <label htmlFor="published" className="text-sm">Published</label>
           </div>
 
-          <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={formData.is_published}
-                onChange={(e) => handleChange('is_published', e.target.checked)}
-                className="rounded"
-                disabled={isSubmitting}
-              />
-              <span className="text-sm">Published</span>
-            </label>
-            
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={formData.is_featured}
-                onChange={(e) => handleChange('is_featured', e.target.checked)}
-                className="rounded"
-                disabled={isSubmitting}
-              />
-              <span className="text-sm">Featured</span>
-            </label>
-          </div>
-
-          <div className="flex justify-end gap-4 pt-6 border-t border-border">
+          <div className="flex justify-end gap-4 pt-6 border-t">
             <button
               type="button"
               onClick={onCancel}
-              className="px-6 py-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="px-6 py-2 text-gray-600 hover:text-gray-800"
               disabled={isSubmitting}
             >
               Cancel
@@ -242,14 +155,14 @@ export const SimpleBlogForm = ({ post, onSave, onCancel }: SimpleBlogFormProps) 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
             >
               <Save size={16} />
               {isSubmitting ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
