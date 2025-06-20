@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Edit, Trash2, Calendar, Eye } from 'lucide-react';
 import { useBlogPosts, type BlogPost } from '@/hooks/useBlogPosts';
-import { BlogForm } from './BlogForm';
+import { SimpleBlogForm } from './SimpleBlogForm';
 
 export const BlogManagement = () => {
   const { blogPosts, isLoading, error, refetch, addBlogPost, updateBlogPost, deleteBlogPost } = useBlogPosts();
@@ -11,7 +11,6 @@ export const BlogManagement = () => {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    // Fetch all posts including unpublished ones for admin view
     refetch(true);
   }, [refetch]);
 
@@ -24,7 +23,6 @@ export const BlogManagement = () => {
       }
       setShowForm(false);
       setEditingPost(null);
-      // Refresh the list to show the new/updated post
       refetch(true);
     } catch (error) {
       console.error('Failed to save blog post:', error);
@@ -35,7 +33,6 @@ export const BlogManagement = () => {
     if (confirm('Are you sure you want to delete this blog post?')) {
       try {
         await deleteBlogPost(id);
-        // Refresh the list after deletion
         refetch(true);
       } catch (error) {
         console.error('Failed to delete blog post:', error);
@@ -165,7 +162,7 @@ export const BlogManagement = () => {
       </div>
 
       {showForm && (
-        <BlogForm
+        <SimpleBlogForm
           post={editingPost}
           onSave={handleSave}
           onCancel={handleCancel}

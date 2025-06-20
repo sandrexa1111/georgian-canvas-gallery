@@ -25,11 +25,7 @@ export const useComments = () => {
       setIsLoading(true);
       setError(null);
       
-      if (artworkId) {
-        console.log('Fetching comments for artwork:', artworkId);
-      } else {
-        console.log('Fetching all approved comments for public display');
-      }
+      console.log('Fetching comments for artwork:', artworkId || 'all approved');
       
       let query = supabase
         .from('artwork_comments')
@@ -39,7 +35,6 @@ export const useComments = () => {
       if (artworkId) {
         query = query.eq('artwork_id', artworkId);
       } else {
-        // When fetching all comments for public display, only get approved ones
         query = query.eq('is_approved', true);
       }
 
@@ -76,11 +71,32 @@ export const useComments = () => {
 
   const addComment = async (commentData: Omit<Comment, 'id' | 'created_at' | 'is_approved'>) => {
     try {
+      // Validate input data
+      if (!commentData.user_name?.trim()) {
+        throw new Error('Name is required');
+      }
+      if (!commentData.user_email?.trim()) {
+        throw new Error('Email is required');
+      }
+      if (!commentData.comment_text?.trim()) {
+        throw new Error('Comment is required');
+      }
+      if (!commentData.artwork_id?.trim()) {
+        throw new Error('Artwork ID is required');
+      }
+
       console.log('Adding comment for artwork:', commentData.artwork_id);
       
       const { data, error } = await supabase
         .from('artwork_comments')
-        .insert([{ ...commentData, is_approved: false }])
+        .insert([{ 
+          ...commentData, 
+          is_approved: false,
+          user_name: commentData.user_name.trim(),
+          user_email: commentData.user_email.trim(),
+          comment_text: commentData.comment_text.trim(),
+          rating: Math.max(1, Math.min(5, commentData.rating || 5))
+        }])
         .select()
         .single();
 
@@ -90,8 +106,6 @@ export const useComments = () => {
       }
       
       console.log('Comment added successfully:', data);
-      
-      // Add the new comment to the local state
       setComments(prev => [data, ...prev]);
       
       toast({
@@ -102,9 +116,10 @@ export const useComments = () => {
       return data;
     } catch (error) {
       console.error('Error adding comment:', error);
+      const message = error instanceof Error ? error.message : "Failed to add comment. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to add comment. Please try again.",
+        description: message,
         variant: "destructive",
       });
       throw error;
@@ -113,6 +128,10 @@ export const useComments = () => {
 
   const approveComment = async (id: string) => {
     try {
+      if (!id?.trim()) {
+        throw new Error('Comment ID is required');
+      }
+
       console.log('Approving comment:', id);
       
       const { data, error } = await supabase
@@ -128,7 +147,6 @@ export const useComments = () => {
       }
       
       console.log('Comment approved successfully:', data);
-      
       setComments(prev => prev.map(comment => 
         comment.id === id ? data : comment
       ));
@@ -152,6 +170,10 @@ export const useComments = () => {
 
   const deleteComment = async (id: string) => {
     try {
+      if (!id?.trim()) {
+        throw new Error('Comment ID is required');
+      }
+
       console.log('Deleting comment:', id);
       
       const { error } = await supabase
@@ -165,8 +187,8 @@ export const useComments = () => {
       }
       
       console.log('Comment deleted successfully');
-      
       setComments(prev => prev.filter(comment => comment.id !== id));
+      
       toast({
         title: "Success",
         description: "Comment deleted",
