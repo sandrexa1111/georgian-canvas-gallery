@@ -38,9 +38,16 @@ export const SimpleImageUpload = ({
 
     setIsUploading(true);
     try {
-      // For now, create a simple URL (in production, you'd upload to Supabase Storage)
+      // Create a more reliable URL for the image
       const url = URL.createObjectURL(file);
-      onImageUpload(url);
+      
+      // Store the file data for later use if needed
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string;
+        onImageUpload(dataUrl);
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       console.error('Upload error:', error);
       setError('Failed to upload image. Please try again.');
@@ -65,6 +72,10 @@ export const SimpleImageUpload = ({
             src={currentImageUrl}
             alt="Featured image"
             className="w-full h-48 object-cover rounded-lg border border-gray-600"
+            onError={(e) => {
+              console.error('Image failed to load:', currentImageUrl);
+              e.currentTarget.style.display = 'none';
+            }}
           />
           <button
             type="button"
