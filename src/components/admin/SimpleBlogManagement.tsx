@@ -1,15 +1,18 @@
 
 import { useState } from 'react';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
-import { useSimpleBlog } from '@/hooks/useSimpleBlog';
-import { SimpleBlogForm } from './SimpleBlogForm';
+import { useSimpleBlog, type SimpleBlogPost } from '@/hooks/useSimpleBlog'; // Import SimpleBlogPost type
+import { SimpleBlogForm, type SimpleBlogFormProps } from './SimpleBlogForm';
+
+// Define the type for postData based on SimpleBlogForm's onSave prop
+type SimpleBlogPostDataType = Parameters<SimpleBlogFormProps['onSave']>[0];
 
 export const SimpleBlogManagement = () => {
   const { posts, loading, error, createPost, updatePost, deletePost, fetchPosts } = useSimpleBlog();
   const [showForm, setShowForm] = useState(false);
-  const [editingPost, setEditingPost] = useState(null);
+  const [editingPost, setEditingPost] = useState<SimpleBlogPost | null>(null); // Correct type for editingPost
 
-  const handleSave = async (postData: any) => {
+  const handleSave = async (postData: SimpleBlogPostDataType) => {
     try {
       if (editingPost) {
         await updatePost(editingPost.id, postData);
@@ -35,7 +38,7 @@ export const SimpleBlogManagement = () => {
     }
   };
 
-  const handleEdit = (post: any) => {
+  const handleEdit = (post: SimpleBlogPost) => { // Correct type for post parameter
     setEditingPost(post);
     setShowForm(true);
   };

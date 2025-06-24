@@ -15,7 +15,14 @@ export const ScrollNavigation = () => {
     ["rgba(4, 4, 4, 0.8)", "rgba(4, 4, 4, 0.95)"]
   );
 
-  const navItems = [
+  interface NavItem {
+    id: string;
+    label: string;
+    isScroll: boolean;
+    path?: string;
+  }
+
+  const navItems: NavItem[] = [
     { id: 'home', label: 'Home', isScroll: true },
     { id: 'gallery', label: 'Gallery', isScroll: true },
     { id: 'blog', label: 'Blog', isScroll: false, path: '/blog' },
@@ -39,7 +46,7 @@ export const ScrollNavigation = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navItems]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -49,7 +56,7 @@ export const ScrollNavigation = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleNavClick = (item: any) => {
+  const handleNavClick = (item: NavItem) => {
     if (item.isScroll) {
       scrollToSection(item.id);
     } else {

@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { useArtworks, type Artwork } from '@/hooks/useArtworks';
 import { ArtworkForm } from './ArtworkForm';
+
+// Define the type for artworkData based on ArtworkForm's onSave prop
+// This assumes ArtworkForm is in the same directory or properly imported
+// And initialFormData is exported or its type is accessible
+import { type ArtworkFormProps } from './ArtworkForm'; // Assuming ArtworkFormProps is exported
+type ArtworkDataType = Parameters<ArtworkFormProps['onSave']>[0];
+
 
 export const ArtworkManagement = () => {
   const { artworks, categories, isLoading, error, refetch, addArtwork, updateArtwork, deleteArtwork } = useArtworks();
@@ -13,7 +20,7 @@ export const ArtworkManagement = () => {
     refetch();
   }, [refetch]);
 
-  const handleSave = async (artworkData: any) => {
+  const handleSave = async (artworkData: ArtworkDataType) => {
     try {
       if (editingArtwork) {
         await updateArtwork(editingArtwork.id, artworkData);

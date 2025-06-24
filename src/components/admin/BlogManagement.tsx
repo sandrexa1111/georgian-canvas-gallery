@@ -2,7 +2,10 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Calendar, Eye } from 'lucide-react';
 import { useBlogPosts, type BlogPost } from '@/hooks/useBlogPosts';
-import { SimpleBlogForm } from './SimpleBlogForm';
+import { SimpleBlogForm, type SimpleBlogFormProps } from './SimpleBlogForm';
+
+// Define the type for postData based on SimpleBlogForm's onSave prop
+type SimpleBlogPostDataType = Parameters<SimpleBlogFormProps['onSave']>[0];
 
 export const BlogManagement = () => {
   const { blogPosts, isLoading, error, refetch, addBlogPost, updateBlogPost, deleteBlogPost } = useBlogPosts();
@@ -13,7 +16,7 @@ export const BlogManagement = () => {
     refetch(true);
   }, [refetch]);
 
-  const handleSave = async (postData: any) => {
+  const handleSave = async (postData: SimpleBlogPostDataType) => {
     try {
       if (editingPost) {
         await updateBlogPost(editingPost.id, postData);

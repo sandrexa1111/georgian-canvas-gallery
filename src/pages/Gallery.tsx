@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ArtworkModal } from '@/components/ArtworkModal';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Navigation } from '@/components/Navigation';
-import { useArtworks, getPeriodFromYear, getAvailablePeriods, type Artwork as SupabaseArtwork, type Category } from '@/hooks/useArtworks';
+import { useArtworks, getPeriodFromYear, getAvailablePeriods, type Artwork as SupabaseArtwork } from '@/hooks/useArtworks'; // Removed Category
 
 interface Artwork {
   id: number;

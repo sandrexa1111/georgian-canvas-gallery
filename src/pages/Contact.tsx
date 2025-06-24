@@ -27,7 +27,7 @@ const Contact = () => {
       });
       
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
+    } catch { // Removed unused 'error' variable
       toast({
         title: "Error sending message",
         description: "Please try again or contact us directly.",

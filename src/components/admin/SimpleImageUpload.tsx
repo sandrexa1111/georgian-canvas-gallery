@@ -38,9 +38,6 @@ export const SimpleImageUpload = ({
 
     setIsUploading(true);
     try {
-      // Create a more reliable URL for the image
-      const url = URL.createObjectURL(file);
-      
       // Store the file data for later use if needed
       const reader = new FileReader();
       reader.onload = (event) => {

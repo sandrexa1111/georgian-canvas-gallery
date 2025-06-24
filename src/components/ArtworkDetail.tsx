@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { X, Star, MessageSquare } from 'lucide-react';
+import { X } from 'lucide-react';
 import { CommentForm } from './CommentForm';
 import { CommentsList } from './CommentsList';
 

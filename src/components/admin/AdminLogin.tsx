@@ -54,11 +54,12 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         });
         onLogin();
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Login error:', error);
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       toast({
         title: "Login failed",
-        description: error.message || "Invalid credentials",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

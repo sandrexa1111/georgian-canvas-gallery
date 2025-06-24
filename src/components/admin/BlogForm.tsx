@@ -7,16 +7,33 @@ import { Progress } from '@/components/ui/progress';
 import { BlogPost } from '@/hooks/useBlogPosts';
 import { ImageUpload } from './ImageUpload';
 
-interface BlogFormProps {
+import { BlogPost } from '@/hooks/useBlogPosts';
+import { ImageUpload } from './ImageUpload';
+
+// Define initial form data and its type
+const initialBlogFormData = {
+  title: '',
+  content: '',
+  excerpt: '',
+  featured_image_url: '',
+  is_published: false,
+  is_featured: false,
+  tags: '', // Keep as string for input, convert to array on save
+  meta_description: ''
+};
+
+type BlogFormDataType = typeof initialBlogFormData & { tags: string[] | null }; // For onSave
+
+export interface BlogFormProps { // Export for use in BlogManagement
   post?: BlogPost | null;
-  onSave: (postData: any) => Promise<void>;
+  onSave: (postData: BlogFormDataType) => Promise<void>;
   onCancel: () => void;
 }
 
 export const BlogForm = ({ post, onSave, onCancel }: BlogFormProps) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
+  const [formData, setFormData] = useState(initialBlogFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
     excerpt: '',
     featured_image_url: '',
     is_published: false,
@@ -113,7 +130,10 @@ export const BlogForm = ({ post, onSave, onCancel }: BlogFormProps) => {
     }
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (
+    field: keyof typeof initialBlogFormData,
+    value: string | boolean | File // More specific types based on form fields
+  ) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {

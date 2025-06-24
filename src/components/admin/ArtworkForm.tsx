@@ -4,15 +4,29 @@ import { motion } from 'framer-motion';
 import { X, Upload } from 'lucide-react';
 import { type Artwork, type Category } from '@/hooks/useArtworks';
 
-interface ArtworkFormProps {
+export interface ArtworkFormProps { // Export the interface
   artwork?: Artwork | null;
   categories: Category[];
-  onSave: (artwork: any) => void;
+  onSave: (artwork: typeof initialFormData) => void;
   onCancel: () => void;
 }
 
+const initialFormData = {
+  title: '',
+  image_url: '',
+  dimensions: '',
+  medium: '',
+  year_created: new Date().getFullYear(),
+  description: '',
+  category_id: '',
+  price: undefined as number | undefined,
+  is_featured: false,
+  is_published: true,
+};
+
 export const ArtworkForm = ({ artwork, categories, onSave, onCancel }: ArtworkFormProps) => {
   const [formData, setFormData] = useState({
+    ...initialFormData,
     title: artwork?.title || '',
     image_url: artwork?.image_url || '',
     dimensions: artwork?.dimensions || '',

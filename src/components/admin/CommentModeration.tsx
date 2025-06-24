@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { useComments, type Comment } from '@/hooks/useComments';
-import { Star, Check, X, Trash2, AlertCircle, MessageSquare } from 'lucide-react';
+import { Star, Check, Trash2, AlertCircle, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const CommentModeration = () => {

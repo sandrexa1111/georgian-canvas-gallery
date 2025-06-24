@@ -69,7 +69,7 @@ export const useBlogPosts = () => {
       console.log('Generating unique slug for title:', title);
       
       // Generate base slug
-      let baseSlug = title
+      const baseSlug = title
         .toLowerCase()
         .trim()
         .replace(/[^a-z0-9\s-]/g, '')
@@ -189,7 +189,7 @@ export const useBlogPosts = () => {
     try {
       console.log('Updating blog post:', id);
       
-      const updateData: any = { ...postData };
+      const updateData: Partial<BlogPost> = { ...postData };
       
       // Calculate reading time if content changed
       if (postData.content) {
@@ -197,7 +197,7 @@ export const useBlogPosts = () => {
       }
       
       // Set published_at based on is_published status
-      if (postData.hasOwnProperty('is_published')) {
+      if (Object.prototype.hasOwnProperty.call(postData, 'is_published')) {
         updateData.published_at = postData.is_published ? new Date().toISOString() : null;
       }
       

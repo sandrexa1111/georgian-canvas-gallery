@@ -4,9 +4,18 @@ import { X, Save } from 'lucide-react';
 import { BlogPost } from '@/hooks/useBlogPosts';
 import { SimpleImageUpload } from './SimpleImageUpload';
 
-interface SimpleBlogFormProps {
+// Define the type for the data passed to onSave
+type SimpleBlogPostData = {
+  title: string;
+  content: string;
+  excerpt: string | null;
+  featured_image_url: string | null;
+  is_published: boolean;
+};
+
+export interface SimpleBlogFormProps { // Export for use in BlogManagement
   post?: BlogPost | null;
-  onSave: (postData: any) => Promise<void>;
+  onSave: (postData: SimpleBlogPostData) => Promise<void>;
   onCancel: () => void;
 }
 
